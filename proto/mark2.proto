@@ -1,0 +1,171 @@
+syntax = "proto3";
+
+package mark2;
+
+// ===== ENUM =====
+
+// 結果コード
+enum ResultCodes {
+    NG = 0;
+    OK = 1;
+}
+
+// ユーザステータス
+enum UserStatus {
+    Logout = 0;    // ログアウト
+    Login = 1;     // ログイン
+    WaitMatch = 2; // マッチング待ち
+    Matching = 3;  // マッチング済み
+}
+
+// ルームステータス
+enum RoomStatus {
+    CLOSED = 0; // クローズド
+    OPEN = 1;   // オープン
+}
+
+// メッセージタイプ
+enum MessageType {
+    NONE = 0;      // 未定義
+    OWN = 1;       // 自分自身に対するメッセージ
+    ROOM = 2;      // ルームに対するメッセージ（自分は除く）
+    BROADCAST = 3; // ルーム全員に対するメッセージ
+}
+
+// ===== Model =====
+
+// アクセストークン
+message AccessToken {
+    string token = 1;
+}
+
+// ユーザ情報
+message UserInfo {
+    int32 group_id = 1;
+    int32 id = 2;
+    string name = 3;
+    UserStatus status = 4;
+}
+
+// ユーザ情報リスト
+message UserInfoList {
+    repeated UserInfo list = 1;
+}
+
+// ルーム情報
+message RoomInfo {
+    int32 id = 1;
+    int32 capacity = 2;
+    RoomStatus status = 3;
+    repeated UserInfo user_list = 4;
+}
+
+// ルーム情報リスト
+message RoomInfoList {
+    repeated RoomInfo list = 1;
+}
+
+// メッセージ
+message Message {
+    int32 id = 1;
+    MessageType type = 2;
+    UserInfo from_user = 3;
+    string content = 4;
+}
+
+// メッセージリスト
+message MessageList {
+    repeated Message list = 1;
+}
+
+// ===== Request =====
+
+// ログインリクエスト
+message LoginRequest {
+    int32 group_id = 1;
+    string unique_key = 2;
+    string user_name = 3;
+}
+
+// ルーム作成リクエスト
+message CreateRoomRequest {
+    AccessToken token = 1;
+    int32 capacity = 2;
+}
+
+// ルーム参加リクエスト
+message JoinRoomRequest {
+    AccessToken token = 1;
+    int32 room_id = 2;
+}
+
+// マッチリクエスト
+message MatchRequest {
+    AccessToken token = 1;
+    string key = 2;
+}
+
+// メッセージリクエスト
+message MessageRequest {
+    AccessToken token = 1;
+    MessageType type = 2;
+    string content = 3;
+}
+
+// ===== Response =====
+
+// 結果一般
+message Result {
+    ResultCodes code = 1;
+    string message = 2;
+}
+
+// ログイン結果
+message LoginResult {
+    Result result = 1;
+    AccessToken access_token = 2;
+}
+
+// ユーザ情報リスト結果
+message UserInfoListResult {
+    Result result = 1;
+    UserInfoList user_info_list = 2;
+}
+
+// ルーム情報リスト結果
+message RoomInfoListResult {
+    Result result = 1;
+    RoomInfoList room_info_list = 2;
+}
+
+// ユーザ情報結果
+message UserInfoResult {
+    Result result = 1;
+    UserInfo user_info = 2;
+}
+
+// ルーム情報結果
+message RoomInfoResult {
+    Result result = 1;
+    RoomInfo room_info = 2;
+}
+
+service MessageService {
+    rpc Login (LoginRequest) returns (LoginResult); // ログイン
+    rpc Logout (AccessToken) returns (Result);      // ログアウト
+
+    rpc GetUserInfoList (AccessToken) returns (UserInfoListResult); // ユーザ情報リスト取得
+    rpc GetRoomInfoList (AccessToken) returns (RoomInfoListResult); // ルーム情報リスト取得
+    rpc GetOwnUserInfo (AccessToken) returns (UserInfoResult);      // 自分のユーザ情報取得
+    rpc GetOwnRoomInfo (AccessToken) returns (RoomInfoResult);      // 自分のルーム情報取得
+
+    rpc CreateRoom (CreateRoomRequest) returns (RoomInfoResult); // ルーム作成
+    rpc JoinRoom (JoinRoomRequest) returns (RoomInfoResult);     // ルームに参加
+    rpc MatchRandom (MatchRequest) returns (RoomInfoResult);     // ランダムマッチング
+    rpc ExitRoom (AccessToken) returns (Result);                 // ルームを退出する
+
+    rpc SendMessage (MessageRequest) returns (Result);       // メッセージ送信
+    rpc SendStream (stream MessageRequest) returns (stream Result);       // ストリーム送信
+
+    rpc WaitMessage (AccessToken) returns (stream Message); // メッセージ受信待ち
+}
