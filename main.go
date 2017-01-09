@@ -17,6 +17,8 @@ import (
 )
 
 var (
+	version    string
+	revision   string
 	tls        = flag.Bool("tls", false, "Connection uses TLS if true, else plain TCP")
 	certFile   = flag.String("cert_file", "testdata/server1.pem", "The TLS cert file")
 	keyFile    = flag.String("key_file", "testdata/server1.key", "The TLS key file")
