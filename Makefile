@@ -27,7 +27,7 @@ test: deps
 ## lint
 lint: setup
 	go vet $$(glide novendor)
-	for pkg in $$(glide novendor -x); do\
+	for pkg in $$(glide novendor -x | grep -v proto); do\
 		golint --set_exit_status $$pkg || exit $$?; \
 	done
 
