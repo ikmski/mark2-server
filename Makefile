@@ -21,18 +21,18 @@ update: deps
 	glide update
 
 ## run tests
-test: deps
-	go test $$(glide novendor)
+test:
+	go test $$(glide novendor -x | grep -v proto)
 
 ## lint
-lint: setup
+lint:
 	go vet $$(glide novendor)
 	for pkg in $$(glide novendor -x | grep -v proto); do\
 		golint --set_exit_status $$pkg || exit $$?; \
 	done
 
 ## build
-bin/$(NAME): deps
+bin/$(NAME):
 	go build \
 		-a \
 		-tags netgo \
