@@ -7,15 +7,22 @@ import (
 )
 
 type storage struct {
+	mutex   sync.Mutex
 	mapData map[string]string
 	setData map[string]([]string)
 }
+
+var storageInstance *storage = newStorage()
 
 func newStorage() *storage {
 	s := new(storage)
 	s.mapData = make(map[string]string)
 	s.setData = make(map[string]([]string))
 	return s
+}
+
+func getStorageInstance() *storage {
+	return storageInstance
 }
 
 /* 確認 */
@@ -26,9 +33,8 @@ func (s *storage) has(key string) bool {
 /* 削除 */
 func (s *storage) del(key string) error {
 
-	m := new(sync.Mutex)
-	m.Lock()
-	defer m.Unlock()
+	s.mutex.Lock()
+	defer s.mutex.Unlock()
 
 	var err error
 
@@ -64,9 +70,8 @@ func (s *storage) get(key string) (string, error) {
 /* 設定 */
 func (s *storage) set(key string, value string) error {
 
-	m := new(sync.Mutex)
-	m.Lock()
-	defer m.Unlock()
+	s.mutex.Lock()
+	defer s.mutex.Unlock()
 
 	s.mapData[key] = value
 
@@ -88,9 +93,8 @@ func (s *storage) members(key string) ([]string, error) {
 /* 要素の追加 */
 func (s *storage) add(key string, value string) error {
 
-	m := new(sync.Mutex)
-	m.Lock()
-	defer m.Unlock()
+	s.mutex.Lock()
+	defer s.mutex.Unlock()
 
 	set, ok := s.setData[key]
 	if !ok {
@@ -112,9 +116,8 @@ func (s *storage) remove(key string, value string) error {
 		return err
 	}
 
-	m := new(sync.Mutex)
-	m.Lock()
-	defer m.Unlock()
+	s.mutex.Lock()
+	defer s.mutex.Unlock()
 
 	newSet := make([]string, len(set))
 	i := 0

@@ -6,7 +6,7 @@ import (
 
 func TestStorageMapData(t *testing.T) {
 
-	storage := newStorage()
+	storage := getStorageInstance()
 
 	var key = "test_key"
 	var val = "test_val"
@@ -53,7 +53,7 @@ func TestStorageMapData(t *testing.T) {
 
 func TestStorageSetData(t *testing.T) {
 
-	storage := newStorage()
+	storage := getStorageInstance()
 
 	var key = "test_key"
 	var val01 = "test_val_01"
@@ -131,5 +131,29 @@ func TestStorageSetData(t *testing.T) {
 	has = storage.has(key)
 	if has {
 		t.Errorf("got %v\nwant %v", has, false)
+	}
+}
+
+func TestStorageSingleton(t *testing.T) {
+
+	storage1 := getStorageInstance()
+	storage2 := getStorageInstance()
+
+	var key = "test_key"
+	var val = "test_val"
+
+	// Set
+	err := storage1.set(key, val)
+	if err != nil {
+		t.Errorf("got %v\n", err)
+	}
+
+	// Get
+	v, err := storage2.get(key)
+	if err != nil {
+		t.Errorf("got %v\n", err)
+	}
+	if v != val {
+		t.Errorf("got %v\nwant %v", v, val)
 	}
 }
