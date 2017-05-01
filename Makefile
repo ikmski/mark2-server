@@ -22,7 +22,7 @@ update: deps
 
 ## run tests
 test:
-	go test $$(glide novendor -x | grep -v proto)
+	go test -v $$(glide novendor -x | grep -v proto)
 
 ## lint
 lint:
