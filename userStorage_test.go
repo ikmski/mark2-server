@@ -112,3 +112,49 @@ func TestUserStorageUserInfo(t *testing.T) {
 		t.Errorf("got %v\n", err)
 	}
 }
+
+func TestUserStorageUserInfoList(t *testing.T) {
+
+	userStorage := getUserStorageInstance()
+
+	userInfo := new(mark2.UserInfo)
+	groupId := 10
+
+	list, err := userStorage.getUserInfoListByStatus(groupId, mark2.UserStatus_Login)
+	if err != nil {
+		t.Errorf("got %v\n", err)
+	}
+	if len(list.GetList()) != 0 {
+		t.Errorf("got %v\nwant %v", len(list.GetList()), 0)
+	}
+
+	userInfo.Id = 100001
+	userInfo.Name = "test_user_name_1"
+	err = userStorage.addUserInfoListByStatus(groupId, mark2.UserStatus_Login, userInfo)
+	if err != nil {
+		t.Errorf("got %v\n", err)
+	}
+
+	userInfo.Id = 100002
+	userInfo.Name = "test_user_name_2"
+	err = userStorage.addUserInfoListByStatus(groupId, mark2.UserStatus_Login, userInfo)
+	if err != nil {
+		t.Errorf("got %v\n", err)
+	}
+
+	userInfo.Id = 100003
+	userInfo.Name = "test_user_name_3"
+	err = userStorage.addUserInfoListByStatus(groupId, mark2.UserStatus_Login, userInfo)
+	if err != nil {
+		t.Errorf("got %v\n", err)
+	}
+
+	list, err = userStorage.getUserInfoListByStatus(groupId, mark2.UserStatus_Login)
+	if err != nil {
+		t.Errorf("got %v\n", err)
+	}
+	if len(list.GetList()) != 3 {
+		t.Errorf("got %v\nwant %v", len(list.GetList()), 3)
+	}
+
+}

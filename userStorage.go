@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"strconv"
 	"sync"
 
@@ -113,4 +114,49 @@ func (_ *userStorage) removeUserInfoByUserId(userId int) error {
 	key := "user_info_by_user_id." + strconv.Itoa(userId)
 
 	return storage.del(key)
+}
+
+func (_ *userStorage) getUserInfoListByStatus(groupId int, status mark2.UserStatus) (*mark2.UserInfoList, error) {
+
+	storage := getStorageInstance()
+	key := fmt.Sprintf("user_info_list_by_group_id.%d_status.%s", groupId, status.String())
+
+	userInfoList := new(mark2.UserInfoList)
+
+	has := storage.has(key)
+	if has {
+
+		list, err := storage.members(key)
+		if err != nil {
+			return nil, err
+		}
+
+		for _, v := range list {
+			info := new(mark2.UserInfo)
+			err = proto.UnmarshalText(v, info)
+			if err != nil {
+				return nil, err
+			}
+
+			userInfoList.List = append(userInfoList.List, info)
+		}
+	}
+
+	return userInfoList, nil
+}
+
+func (_ *userStorage) addUserInfoListByStatus(groupId int, status mark2.UserStatus, userInfo *mark2.UserInfo) error {
+
+	storage := getStorageInstance()
+	key := fmt.Sprintf("user_info_list_by_group_id.%d_status.%s", groupId, status.String())
+
+	return storage.add(key, proto.MarshalTextString(userInfo))
+}
+
+func (_ *userStorage) removeUserInfoListByStatus(groupId int, status mark2.UserStatus, userInfo *mark2.UserInfo) error {
+
+	storage := getStorageInstance()
+	key := fmt.Sprintf("user_info_list_by_group_id.%d_status.%s", groupId, status.String())
+
+	return storage.remove(key, proto.MarshalTextString(userInfo))
 }
