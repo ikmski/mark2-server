@@ -31,6 +31,10 @@ lint:
 		golint --set_exit_status $$pkg || exit $$?; \
 	done
 
+## build protobuf
+protoc:
+	protoc -I proto/ --go_out=plugins=grpc:proto/ proto/mark2.proto
+
 ## build
 bin/$(NAME):
 	go build \
@@ -39,6 +43,10 @@ bin/$(NAME):
 		-installsuffix netgo \
 		-ldflags "$(LDFLAGS)" \
 		-o bin/$(NAME)
+
+## clean
+clean:
+	rm -f bin/$(NAME)
 
 ## install
 install:

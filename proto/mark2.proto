@@ -41,10 +41,9 @@ message AccessToken {
 
 // ユーザ情報
 message UserInfo {
-    int32 group_id = 1;
-    int32 id = 2;
-    string name = 3;
-    UserStatus status = 4;
+    uint32 group_id = 1;
+    uint32 id = 2;
+    UserStatus status = 3;
 }
 
 // ユーザ情報リスト
@@ -54,10 +53,10 @@ message UserInfoList {
 
 // ルーム情報
 message RoomInfo {
-    int32 id = 1;
-    int32 capacity = 2;
+    uint32 id = 1;
+    uint32 capacity = 2;
     RoomStatus status = 3;
-    repeated UserInfo user_list = 4;
+    repeated uint32 user_id_list = 4;
 }
 
 // ルーム情報リスト
@@ -67,9 +66,9 @@ message RoomInfoList {
 
 // メッセージ
 message Message {
-    int32 id = 1;
+    uint32 id = 1;
     MessageType type = 2;
-    UserInfo from_user = 3;
+    uint32 from_user_id = 3;
     string content = 4;
 }
 
@@ -82,21 +81,20 @@ message MessageList {
 
 // ログインリクエスト
 message LoginRequest {
-    int32 group_id = 1;
+    uint32 group_id = 1;
     string unique_key = 2;
-    string user_name = 3;
 }
 
 // ルーム作成リクエスト
 message CreateRoomRequest {
     AccessToken token = 1;
-    int32 capacity = 2;
+    uint32 capacity = 2;
 }
 
 // ルーム参加リクエスト
 message JoinRoomRequest {
     AccessToken token = 1;
-    int32 room_id = 2;
+    uint32 room_id = 2;
 }
 
 // マッチリクエスト
