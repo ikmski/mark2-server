@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"strconv"
 	"sync"
 
 	"github.com/golang/protobuf/proto"
@@ -24,22 +23,18 @@ func getUserStorageInstance() *userStorage {
 	return userStorageInstance
 }
 
-func (_ *userStorage) getUserIdByUniqueKey(uniqueKey string) (int, error) {
+func (_ *userStorage) getUserIdByUniqueKey(uniqueKey string) (uint32, error) {
 
 	storage := getStorageInstance()
 	key := "user_id_by_unique_key." + uniqueKey
-	val, err := storage.get(key)
-	if err != nil {
-		return 0, err
-	}
-	return strconv.Atoi(val)
+	return storage.getUint32(key)
 }
 
-func (_ *userStorage) setUserIdByUniqueKey(uniqueKey string, userId int) error {
+func (_ *userStorage) setUserIdByUniqueKey(uniqueKey string, userId uint32) error {
 
 	storage := getStorageInstance()
 	key := "user_id_by_unique_key." + uniqueKey
-	return storage.set(key, strconv.Itoa(userId))
+	return storage.setUint32(key, userId)
 }
 
 func (_ *userStorage) removeUserIdByUniqueKey(uniqueKey string) error {
@@ -49,7 +44,7 @@ func (_ *userStorage) removeUserIdByUniqueKey(uniqueKey string) error {
 	return storage.del(key)
 }
 
-func (us *userStorage) createNewUserId() (int, error) {
+func (us *userStorage) createNewUserId() (uint32, error) {
 
 	storage := getStorageInstance()
 	key := "max_user_id"
@@ -57,15 +52,11 @@ func (us *userStorage) createNewUserId() (int, error) {
 	us.mutex.Lock()
 	defer us.mutex.Unlock()
 
-	id := 1000000
+	var id uint32 = 1000000
 	has := storage.has(key)
 	if has {
-		val, err := storage.get(key)
-		if err != nil {
-			return 0, err
-		}
-
-		id, err = strconv.Atoi(val)
+		var err error
+		id, err = storage.getUint32(key)
 		if err != nil {
 			return 0, err
 		}
@@ -73,7 +64,7 @@ func (us *userStorage) createNewUserId() (int, error) {
 
 	id++
 
-	err := storage.set(key, strconv.Itoa(id))
+	err := storage.setUint32(key, id)
 	if err != nil {
 		return 0, err
 	}
@@ -81,10 +72,10 @@ func (us *userStorage) createNewUserId() (int, error) {
 	return id, nil
 }
 
-func (_ *userStorage) getUserInfoByUserId(userId int) (*mark2.UserInfo, error) {
+func (_ *userStorage) getUserInfoByUserId(userId uint32) (*mark2.UserInfo, error) {
 
 	storage := getStorageInstance()
-	key := "user_info_by_user_id." + strconv.Itoa(userId)
+	key := fmt.Sprintf("user_info_by_user_id.%d", userId)
 
 	val, err := storage.get(key)
 	if err != nil {
@@ -92,7 +83,7 @@ func (_ *userStorage) getUserInfoByUserId(userId int) (*mark2.UserInfo, error) {
 	}
 
 	userInfo := new(mark2.UserInfo)
-	err = proto.UnmarshalText(val, userInfo)
+	err = proto.Unmarshal(val, userInfo)
 	if err != nil {
 		return nil, err
 	}
@@ -100,23 +91,28 @@ func (_ *userStorage) getUserInfoByUserId(userId int) (*mark2.UserInfo, error) {
 	return userInfo, nil
 }
 
-func (_ *userStorage) setUserInfoByUserId(userId int, userInfo *mark2.UserInfo) error {
+func (_ *userStorage) setUserInfoByUserId(userId uint32, userInfo *mark2.UserInfo) error {
 
 	storage := getStorageInstance()
-	key := "user_info_by_user_id." + strconv.Itoa(userId)
+	key := fmt.Sprintf("user_info_by_user_id.%d", userId)
 
-	return storage.set(key, proto.MarshalTextString(userInfo))
+	buf, err := proto.Marshal(userInfo)
+	if err != nil {
+		return err
+	}
+
+	return storage.set(key, buf)
 }
 
-func (_ *userStorage) removeUserInfoByUserId(userId int) error {
+func (_ *userStorage) removeUserInfoByUserId(userId uint32) error {
 
 	storage := getStorageInstance()
-	key := "user_info_by_user_id." + strconv.Itoa(userId)
+	key := fmt.Sprintf("user_info_by_user_id.%d", userId)
 
 	return storage.del(key)
 }
 
-func (_ *userStorage) getUserInfoListByStatus(groupId int, status mark2.UserStatus) (*mark2.UserInfoList, error) {
+func (_ *userStorage) getUserInfoListByStatus(groupId uint32, status mark2.UserStatus) (*mark2.UserInfoList, error) {
 
 	storage := getStorageInstance()
 	key := fmt.Sprintf("user_info_list_by_group_id.%d_status.%s", groupId, status.String())
@@ -133,7 +129,7 @@ func (_ *userStorage) getUserInfoListByStatus(groupId int, status mark2.UserStat
 
 		for _, v := range list {
 			info := new(mark2.UserInfo)
-			err = proto.UnmarshalText(v, info)
+			err = proto.Unmarshal(v, info)
 			if err != nil {
 				return nil, err
 			}
@@ -145,18 +141,28 @@ func (_ *userStorage) getUserInfoListByStatus(groupId int, status mark2.UserStat
 	return userInfoList, nil
 }
 
-func (_ *userStorage) addUserInfoListByStatus(groupId int, status mark2.UserStatus, userInfo *mark2.UserInfo) error {
+func (_ *userStorage) addUserInfoListByStatus(groupId uint32, status mark2.UserStatus, userInfo *mark2.UserInfo) error {
 
 	storage := getStorageInstance()
 	key := fmt.Sprintf("user_info_list_by_group_id.%d_status.%s", groupId, status.String())
 
-	return storage.add(key, proto.MarshalTextString(userInfo))
+	buf, err := proto.Marshal(userInfo)
+	if err != nil {
+		return err
+	}
+
+	return storage.add(key, buf)
 }
 
-func (_ *userStorage) removeUserInfoListByStatus(groupId int, status mark2.UserStatus, userInfo *mark2.UserInfo) error {
+func (_ *userStorage) removeUserInfoListByStatus(groupId uint32, status mark2.UserStatus, userInfo *mark2.UserInfo) error {
 
 	storage := getStorageInstance()
 	key := fmt.Sprintf("user_info_list_by_group_id.%d_status.%s", groupId, status.String())
 
-	return storage.remove(key, proto.MarshalTextString(userInfo))
+	buf, err := proto.Marshal(userInfo)
+	if err != nil {
+		return err
+	}
+
+	return storage.remove(key, buf)
 }
