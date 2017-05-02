@@ -120,6 +120,15 @@ func TestUserStorageUserInfoList(t *testing.T) {
 	userInfo := new(mark2.UserInfo)
 	groupId := 10
 
+	var userId1 int32 = 100001
+	var userId2 int32 = 100002
+	var userId3 int32 = 100003
+
+	userName1 := "test_user_name_1"
+	userName2 := "test_user_name_2"
+	userName3 := "test_user_name_3"
+
+	// 空リスト
 	list, err := userStorage.getUserInfoListByStatus(groupId, mark2.UserStatus_Login)
 	if err != nil {
 		t.Errorf("got %v\n", err)
@@ -128,22 +137,23 @@ func TestUserStorageUserInfoList(t *testing.T) {
 		t.Errorf("got %v\nwant %v", len(list.GetList()), 0)
 	}
 
-	userInfo.Id = 100001
-	userInfo.Name = "test_user_name_1"
+	// 追加
+	userInfo.Id = userId1
+	userInfo.Name = userName1
 	err = userStorage.addUserInfoListByStatus(groupId, mark2.UserStatus_Login, userInfo)
 	if err != nil {
 		t.Errorf("got %v\n", err)
 	}
 
-	userInfo.Id = 100002
-	userInfo.Name = "test_user_name_2"
+	userInfo.Id = userId2
+	userInfo.Name = userName2
 	err = userStorage.addUserInfoListByStatus(groupId, mark2.UserStatus_Login, userInfo)
 	if err != nil {
 		t.Errorf("got %v\n", err)
 	}
 
-	userInfo.Id = 100003
-	userInfo.Name = "test_user_name_3"
+	userInfo.Id = userId3
+	userInfo.Name = userName3
 	err = userStorage.addUserInfoListByStatus(groupId, mark2.UserStatus_Login, userInfo)
 	if err != nil {
 		t.Errorf("got %v\n", err)
@@ -157,4 +167,36 @@ func TestUserStorageUserInfoList(t *testing.T) {
 		t.Errorf("got %v\nwant %v", len(list.GetList()), 3)
 	}
 
+	// 削除
+	userInfo.Id = userId2
+	userInfo.Name = userName2
+	err = userStorage.removeUserInfoListByStatus(groupId, mark2.UserStatus_Login, userInfo)
+	if err != nil {
+		t.Errorf("got %v\n", err)
+	}
+
+	// リスト取得
+	list, err = userStorage.getUserInfoListByStatus(groupId, mark2.UserStatus_Login)
+	if err != nil {
+		t.Errorf("got %v\n", err)
+	}
+	if len(list.GetList()) != 2 {
+		t.Errorf("got %v\nwant %v", len(list.GetList()), 2)
+	}
+
+	info1 := list.GetList()[0]
+	if info1.Id != userId1 {
+		t.Errorf("got %v\nwant %v", info1.Id, userId1)
+	}
+	if info1.Name != userName1 {
+		t.Errorf("got %v\nwant %v", info1.Name, userName1)
+	}
+
+	info3 := list.GetList()[1]
+	if info3.Id != userId3 {
+		t.Errorf("got %v\nwant %v", info3.Id, userId3)
+	}
+	if info3.Name != userName3 {
+		t.Errorf("got %v\nwant %v", info3.Name, userName3)
+	}
 }

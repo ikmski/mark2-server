@@ -113,6 +113,9 @@ func TestStorageSetData(t *testing.T) {
 	if err != nil {
 		t.Errorf("got %v\n", err)
 	}
+	if len(v) != 2 {
+		t.Errorf("got %v\nwant %v", len(v), 2)
+	}
 
 	if v[0] != val01 {
 		t.Errorf("got %v\nwant %v", v[0], val01)

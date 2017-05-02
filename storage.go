@@ -119,12 +119,10 @@ func (s *storage) remove(key string, value string) error {
 	s.mutex.Lock()
 	defer s.mutex.Unlock()
 
-	newSet := make([]string, len(set))
-	i := 0
+	newSet := make([]string, 0, len(set))
 	for _, v := range set {
 		if value != v {
-			newSet[i] = v
-			i++
+			newSet = append(newSet, v)
 		}
 	}
 
