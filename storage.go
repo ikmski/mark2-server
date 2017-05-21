@@ -57,6 +57,12 @@ func (s *storage) del(key string) error {
 	return nil
 }
 
+/* クリア */
+func (s *storage) clear() {
+	s.mapData = make(map[string][]byte)
+	s.setData = make(map[string]([][]byte))
+}
+
 /* 取得 */
 func (s *storage) get(key string) ([]byte, error) {
 

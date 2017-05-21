@@ -8,6 +8,7 @@ import (
 func TestStorageMapDataBytes(t *testing.T) {
 
 	storage := getStorageInstance()
+	storage.clear()
 
 	var key = "test_key"
 	val := []byte{0x01, 0x02, 0x03}
@@ -55,6 +56,7 @@ func TestStorageMapDataBytes(t *testing.T) {
 func TestStorageMapDataUint32(t *testing.T) {
 
 	storage := getStorageInstance()
+	storage.clear()
 
 	var key = "test_key"
 	var val uint32 = 100001
@@ -102,6 +104,7 @@ func TestStorageMapDataUint32(t *testing.T) {
 func TestStorageMapDataString(t *testing.T) {
 
 	storage := getStorageInstance()
+	storage.clear()
 
 	var key = "test_key"
 	var val = "test_val"
@@ -149,6 +152,7 @@ func TestStorageMapDataString(t *testing.T) {
 func TestStorageSetDataBytes(t *testing.T) {
 
 	storage := getStorageInstance()
+	storage.clear()
 
 	var key = "test_key"
 	val01 := []byte{0x01, 0x02, 0x03}
@@ -235,6 +239,7 @@ func TestStorageSetDataBytes(t *testing.T) {
 func TestStorageSetDataUint32(t *testing.T) {
 
 	storage := getStorageInstance()
+	storage.clear()
 
 	var key = "test_key"
 	var val01 uint32 = 100001
@@ -321,6 +326,7 @@ func TestStorageSetDataUint32(t *testing.T) {
 func TestStorageSetDataString(t *testing.T) {
 
 	storage := getStorageInstance()
+	storage.clear()
 
 	var key = "test_key"
 	var val01 = "test_val_01"
@@ -408,6 +414,8 @@ func TestStorageSingleton(t *testing.T) {
 
 	storage1 := getStorageInstance()
 	storage2 := getStorageInstance()
+	storage1.clear()
+	storage2.clear()
 
 	var key = "test_key"
 	var val = "test_val"

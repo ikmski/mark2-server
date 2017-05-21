@@ -23,6 +23,11 @@ func getUserStorageInstance() *userStorage {
 	return userStorageInstance
 }
 
+func (_ *userStorage) clear() {
+	storage := getStorageInstance()
+	storage.clear()
+}
+
 func (_ *userStorage) getUserIdByUniqueKey(uniqueKey string) (uint32, error) {
 
 	storage := getStorageInstance()
