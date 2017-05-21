@@ -15,7 +15,21 @@ func newServer() *messageServer {
 
 func (s *messageServer) Login(ctx context.Context, req *pb.LoginRequest) (*pb.LoginResult, error) {
 
-	return new(pb.LoginResult), nil
+	// ユーザが存在しているか
+	user, _ := fetchUser(req.UniqueKey)
+	if user == nil {
+
+		// ユーザを作成
+		_, err := createUser(req.UniqueKey, req.GroupId)
+		if err != nil {
+			return nil, err
+		}
+	}
+
+	result := pb.NewLoginResult()
+	result.Result.Code = pb.ResultCodes_OK
+
+	return result, nil
 }
 
 func (s *messageServer) Logout(ctx context.Context, token *pb.AccessToken) (*pb.Result, error) {
