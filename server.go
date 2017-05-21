@@ -1,7 +1,7 @@
 package main
 
 import (
-	pb "github.com/ikmski/mark2-server/proto"
+	mark2 "github.com/ikmski/mark2-server/proto"
 	"golang.org/x/net/context"
 )
 
@@ -13,7 +13,7 @@ func newServer() *messageServer {
 	return s
 }
 
-func (s *messageServer) Login(ctx context.Context, req *pb.LoginRequest) (*pb.LoginResult, error) {
+func (s *messageServer) Login(ctx context.Context, req *mark2.LoginRequest) (*mark2.LoginResult, error) {
 
 	// ユーザが存在しているか
 	user, _ := fetchUser(req.UniqueKey)
@@ -26,68 +26,68 @@ func (s *messageServer) Login(ctx context.Context, req *pb.LoginRequest) (*pb.Lo
 		}
 	}
 
-	result := pb.NewLoginResult()
-	result.Result.Code = pb.ResultCodes_OK
+	result := mark2.NewLoginResult()
+	result.Result.Code = mark2.ResultCodes_OK
 
 	return result, nil
 }
 
-func (s *messageServer) Logout(ctx context.Context, token *pb.AccessToken) (*pb.Result, error) {
+func (s *messageServer) Logout(ctx context.Context, token *mark2.AccessToken) (*mark2.Result, error) {
 
-	return new(pb.Result), nil
+	return new(mark2.Result), nil
 }
 
-func (s *messageServer) GetUserInfoList(ctx context.Context, token *pb.AccessToken) (*pb.UserInfoListResult, error) {
+func (s *messageServer) GetUserInfoList(ctx context.Context, token *mark2.AccessToken) (*mark2.UserInfoListResult, error) {
 
-	return new(pb.UserInfoListResult), nil
+	return new(mark2.UserInfoListResult), nil
 }
 
-func (s *messageServer) GetRoomInfoList(ctx context.Context, token *pb.AccessToken) (*pb.RoomInfoListResult, error) {
+func (s *messageServer) GetRoomInfoList(ctx context.Context, token *mark2.AccessToken) (*mark2.RoomInfoListResult, error) {
 
-	return new(pb.RoomInfoListResult), nil
+	return new(mark2.RoomInfoListResult), nil
 }
 
-func (s *messageServer) GetOwnUserInfo(ctx context.Context, token *pb.AccessToken) (*pb.UserInfoResult, error) {
+func (s *messageServer) GetOwnUserInfo(ctx context.Context, token *mark2.AccessToken) (*mark2.UserInfoResult, error) {
 
-	return new(pb.UserInfoResult), nil
+	return new(mark2.UserInfoResult), nil
 }
 
-func (s *messageServer) GetOwnRoomInfo(ctx context.Context, token *pb.AccessToken) (*pb.RoomInfoResult, error) {
+func (s *messageServer) GetOwnRoomInfo(ctx context.Context, token *mark2.AccessToken) (*mark2.RoomInfoResult, error) {
 
-	return new(pb.RoomInfoResult), nil
+	return new(mark2.RoomInfoResult), nil
 }
 
-func (s *messageServer) CreateRoom(ctx context.Context, req *pb.CreateRoomRequest) (*pb.RoomInfoResult, error) {
+func (s *messageServer) CreateRoom(ctx context.Context, req *mark2.CreateRoomRequest) (*mark2.RoomInfoResult, error) {
 
-	return new(pb.RoomInfoResult), nil
+	return new(mark2.RoomInfoResult), nil
 }
 
-func (s *messageServer) JoinRoom(ctx context.Context, req *pb.JoinRoomRequest) (*pb.RoomInfoResult, error) {
+func (s *messageServer) JoinRoom(ctx context.Context, req *mark2.JoinRoomRequest) (*mark2.RoomInfoResult, error) {
 
-	return new(pb.RoomInfoResult), nil
+	return new(mark2.RoomInfoResult), nil
 }
 
-func (s *messageServer) MatchRandom(ctx context.Context, req *pb.MatchRequest) (*pb.RoomInfoResult, error) {
+func (s *messageServer) MatchRandom(ctx context.Context, req *mark2.MatchRequest) (*mark2.RoomInfoResult, error) {
 
-	return new(pb.RoomInfoResult), nil
+	return new(mark2.RoomInfoResult), nil
 }
 
-func (s *messageServer) ExitRoom(ctx context.Context, token *pb.AccessToken) (*pb.Result, error) {
+func (s *messageServer) ExitRoom(ctx context.Context, token *mark2.AccessToken) (*mark2.Result, error) {
 
-	return new(pb.Result), nil
+	return new(mark2.Result), nil
 }
 
-func (s *messageServer) SendMessage(ctx context.Context, req *pb.MessageRequest) (*pb.Result, error) {
+func (s *messageServer) SendMessage(ctx context.Context, req *mark2.MessageRequest) (*mark2.Result, error) {
 
-	return new(pb.Result), nil
+	return new(mark2.Result), nil
 }
 
-func (s *messageServer) SendStream(srv pb.MessageService_SendStreamServer) error {
+func (s *messageServer) SendStream(srv mark2.MessageService_SendStreamServer) error {
 
 	return nil
 }
 
-func (s *messageServer) WaitMessage(token *pb.AccessToken, srv pb.MessageService_WaitMessageServer) error {
+func (s *messageServer) WaitMessage(token *mark2.AccessToken, srv mark2.MessageService_WaitMessageServer) error {
 
 	return nil
 }

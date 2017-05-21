@@ -13,7 +13,7 @@ import (
 
 	//	"github.com/golang/protobuf/proto"
 
-	pb "github.com/ikmski/mark2-server/proto"
+	mark2 "github.com/ikmski/mark2-server/proto"
 )
 
 var (
@@ -47,7 +47,7 @@ func main() {
 
 	grpcServer := grpc.NewServer(opts...)
 
-	pb.RegisterMessageServiceServer(grpcServer, newServer())
+	mark2.RegisterMessageServiceServer(grpcServer, newServer())
 
 	grpcServer.Serve(lis)
 }
