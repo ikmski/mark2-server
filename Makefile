@@ -2,58 +2,78 @@
 NAME := mark2-server
 VERSION := v1.0.0
 REVISION := $(shell git rev-parse --short HEAD)
+
+GOFILES := $(shell find . -name "*.go" -type f -not -name '*_test.go' -not -path "./proto/*" -not -path "./vendor/*")
+SOURCES := $(shell find . -name "*.go" -type f)
+
 LDFLAGS := -X 'main.version=$(VERSION)' -X 'main.revision=$(REVISION)'
 
+.PHONY: all
+## all
+all: build
+
+.PHONY: setup
 ## setup
 setup:
-	go get github.com/golang/lint
-	go get github.com/Masterminds/glide
-	go get github.com/Songmu/make2help/cmd/make2help
-	go get google.golang.org/grpc
-	go get github.com/golang/protobuf/{proto,protoc-gen-go}
+	go get -u github.com/golang/lint
+	go get -u github.com/golang/dep/cmd/dep
+	go get -u github.com/Songmu/make2help/cmd/make2help
+	go get -u google.golang.org/grpc
+	go get -u github.com/golang/protobuf/{proto,protoc-gen-go}
 
+.PHONY: install-deps
 ## install dependencies
-deps: setup
-	glide install
+install-deps: setup
+	dep ensure
 
+.PHONY: update-deps
 ## update dependencies
-update: deps
-	glide update
+update-deps: setup
+	dep ensure -update
 
+.PHONY: test
 ## run tests
 test:
-	go test -v $$(glide novendor -x | grep -v proto)
+	go test -v
 
+.PHONY: lint
 ## lint
 lint:
-	go vet $$(glide novendor)
-	for pkg in $$(glide novendor -x | grep -v proto); do\
+	go vet
+	for pkg in $(GOFILES); do\
 		golint --set_exit_status $$pkg || exit $$?; \
 	done
 
+.PHONY: protoc
 ## build protobuf
 protoc:
 	protoc -I proto/ --go_out=plugins=grpc:proto/ proto/mark2.proto
 
+.PHONY: build
 ## build
-bin/$(NAME):
+build: bin/$(NAME)
+
+bin/$(NAME): $(SOURCES)
 	go build \
-		-a \
+		-a -v \
 		-tags netgo \
 		-installsuffix netgo \
 		-ldflags "$(LDFLAGS)" \
-		-o bin/$(NAME)
+		-o $@
 
-## clean
-clean:
-	rm -f bin/$(NAME)
-
+.PHONY: install
 ## install
 install:
 	go install $(LDFLAGS)
 
+.PHONY: clean
+## clean
+clean:
+	go clean -i ./...
+	rm -f bin/$(NAME)
+
+.PHONY: help
 ## show help
 help:
 	@make2help $(MAKEFILE_LIST)
 
-.PHONY: setup deps update test lint install
