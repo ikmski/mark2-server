@@ -6,8 +6,8 @@ import (
 
 func TestTokenValid(t *testing.T) {
 
-	groupId := 1001
-	userId := 2001
+	var groupId uint32 = 1001
+	var userId uint32 = 2001
 	uniqueKey := "test_unique_key"
 	userName := "test_user_name"
 
@@ -37,8 +37,8 @@ func TestTokenValid(t *testing.T) {
 
 func TestTokenDecode(t *testing.T) {
 
-	groupId := 1001
-	userId := 2001
+	var groupId uint32 = 1001
+	var userId uint32 = 2001
 	uniqueKey := "test_unique_key"
 	userName := "test_user_name"
 

@@ -40,4 +40,16 @@ func TestServerLogin(t *testing.T) {
 		t.Errorf("got %v\n", result)
 	}
 
+	if result.AccessToken == nil || result.AccessToken.Token == "" {
+		t.Errorf("got %v\n", result)
+	}
+	ok, err := tokenVerify(result.AccessToken.Token)
+	if err != nil {
+		t.Errorf("got %v\n", err)
+	}
+	if !ok {
+		t.Errorf("got %v\nwant %v", ok, true)
+	}
+
+	userStorage.clear()
 }

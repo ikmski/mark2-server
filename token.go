@@ -10,8 +10,8 @@ import (
 var mySigningKey []byte = []byte("MySigningKey") // TODO
 
 type tokenClaims struct {
-	GroupId   int    `json:"group_id"`
-	UserId    int    `json:"user_id"`
+	GroupId   uint32 `json:"group_id"`
+	UserId    uint32 `json:"user_id"`
 	UniqueKey string `json:"unique_key"`
 	UserName  string `json:"user_name"`
 	jwt.StandardClaims

@@ -26,8 +26,19 @@ func (s *messageServer) Login(ctx context.Context, req *mark2.LoginRequest) (*ma
 	fmt.Printf("%v\n", u)
 	u.changeStatus(mark2.UserStatus_Login)
 
+	// Toke 作成
+	claim := newTokenClaims()
+	claim.GroupId = u.info.GroupId
+	claim.UserId = u.info.Id
+	claim.UniqueKey = u.uniqueKey
+	token, err := claim.encode()
+	if err != nil {
+		return nil, err
+	}
+
 	result := mark2.NewLoginResult()
 	result.Result.Code = mark2.ResultCodes_OK
+	result.AccessToken.Token = token
 
 	return result, nil
 }
