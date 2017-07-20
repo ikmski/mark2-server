@@ -1,6 +1,8 @@
 package main
 
 import (
+	"fmt"
+
 	mark2 "github.com/ikmski/mark2-server/proto"
 	"golang.org/x/net/context"
 )
@@ -15,16 +17,14 @@ func newServer() *messageServer {
 
 func (s *messageServer) Login(ctx context.Context, req *mark2.LoginRequest) (*mark2.LoginResult, error) {
 
-	// ユーザが存在しているか
-	user, _ := fetchUser(req.UniqueKey)
-	if user == nil {
-
-		// ユーザを作成
-		_, err := createUser(req.UniqueKey, req.GroupId)
-		if err != nil {
-			return nil, err
-		}
+	u, err := fetchOrCreateUser(req.UniqueKey, req.GroupId)
+	if err != nil {
+		return nil, err
 	}
+
+	// Status をログインに変更
+	fmt.Printf("%v\n", u)
+	u.changeStatus(mark2.UserStatus_Login)
 
 	result := mark2.NewLoginResult()
 	result.Result.Code = mark2.ResultCodes_OK

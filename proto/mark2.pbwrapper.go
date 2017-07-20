@@ -1,5 +1,10 @@
 package mark2
 
+func NewUserInfo() *UserInfo {
+	ui := new(UserInfo)
+	return ui
+}
+
 func NewResult() *Result {
 	r := new(Result)
 	r.Code = ResultCodes_NG

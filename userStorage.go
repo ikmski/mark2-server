@@ -87,7 +87,7 @@ func (_ *userStorage) getUserInfoByUserId(userId uint32) (*mark2.UserInfo, error
 		return nil, err
 	}
 
-	userInfo := new(mark2.UserInfo)
+	userInfo := mark2.NewUserInfo()
 	err = proto.Unmarshal(val, userInfo)
 	if err != nil {
 		return nil, err
@@ -133,7 +133,7 @@ func (_ *userStorage) getUserInfoListByStatus(groupId uint32, status mark2.UserS
 		}
 
 		for _, v := range list {
-			info := new(mark2.UserInfo)
+			info := mark2.NewUserInfo()
 			err = proto.Unmarshal(v, info)
 			if err != nil {
 				return nil, err
