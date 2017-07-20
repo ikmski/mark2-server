@@ -3,9 +3,9 @@ package main
 import mark2 "github.com/ikmski/mark2-server/proto"
 
 type user struct {
-	info   mark2.UserInfo
-	status mark2.UserStatus
-	roomId uint32
+	uniqueKey string
+	info      mark2.UserInfo
+	roomId    uint32
 }
 
 func newUser() *user {
@@ -36,6 +36,7 @@ func createUser(uniqueKey string, groupId uint32) (*user, error) {
 
 	// ユーザ作成
 	user := newUser()
+	user.uniqueKey = uniqueKey
 	user.info.GroupId = groupId
 	user.info.Id = id
 
@@ -67,7 +68,67 @@ func fetchUser(uniqueKey string) (*user, error) {
 	}
 
 	user := newUser()
+	user.uniqueKey = uniqueKey
 	user.info = *userInfo
 
 	return user, nil
+}
+
+func (u *user) remove() error {
+
+	userStorage := getUserStorageInstance()
+
+	err := userStorage.removeUserInfoByUserId(u.info.Id)
+	if err != nil {
+		return err
+	}
+
+	if u.info.Status != mark2.UserStatus_Logout {
+		err = userStorage.removeUserInfoListByStatus(u.info.GroupId, u.info.Status, &u.info)
+		if err != nil {
+			return err
+		}
+	}
+
+	err = userStorage.removeUserIdByUniqueKey(u.uniqueKey)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (u *user) changeStatus(newStatus mark2.UserStatus) error {
+
+	if newStatus != u.info.Status {
+
+		userStorage := getUserStorageInstance()
+
+		if u.info.Status != mark2.UserStatus_Logout {
+
+			err := userStorage.removeUserInfoListByStatus(u.info.GroupId, u.info.Status, &u.info)
+			if err != nil {
+				return err
+			}
+
+		}
+
+		u.info.Status = newStatus
+
+		err := userStorage.setUserInfoByUserId(u.info.Id, &u.info)
+		if err != nil {
+			return err
+		}
+
+		if newStatus != mark2.UserStatus_Logout {
+
+			err = userStorage.addUserInfoListByStatus(u.info.GroupId, u.info.Status, &u.info)
+			if err != nil {
+				return err
+			}
+
+		}
+	}
+
+	return nil
 }
