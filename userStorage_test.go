@@ -11,7 +11,7 @@ func TestUserStorageUserIdByUniquekey(t *testing.T) {
 	uniqueKey := "test_unique_key"
 	var userId uint32 = 1001
 
-	userStorage := getUserStorageInstance()
+	userStorage := newUserStorage()
 	userStorage.clear()
 
 	_, err := userStorage.getUserIdByUniqueKey(uniqueKey)
@@ -45,7 +45,7 @@ func TestUserStorageUserIdByUniquekey(t *testing.T) {
 
 func TestUserStorageCreateNewUserId(t *testing.T) {
 
-	userStorage := getUserStorageInstance()
+	userStorage := newUserStorage()
 	userStorage.clear()
 
 	id, err := userStorage.createNewUserId()
@@ -75,8 +75,8 @@ func TestUserStorageCreateNewUserId(t *testing.T) {
 
 func TestUserStorageUserInfo(t *testing.T) {
 
-	userStorage1 := getUserStorageInstance()
-	userStorage2 := getUserStorageInstance()
+	userStorage1 := newUserStorage()
+	userStorage2 := newUserStorage()
 	userStorage1.clear()
 	userStorage2.clear()
 
@@ -115,7 +115,7 @@ func TestUserStorageUserInfo(t *testing.T) {
 
 func TestUserStorageUserInfoList(t *testing.T) {
 
-	userStorage := getUserStorageInstance()
+	userStorage := newUserStorage()
 	userStorage.clear()
 
 	userInfo := new(mark2.UserInfo)

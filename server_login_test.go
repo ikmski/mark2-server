@@ -13,7 +13,7 @@ import (
 func TestServerLogin(t *testing.T) {
 
 	// clear Storage
-	userStorage := getUserStorageInstance()
+	userStorage := newUserStorage()
 	userStorage.clear()
 
 	// Set up a connection to the Server.

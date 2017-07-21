@@ -22,7 +22,7 @@ func newUserWithUserId(id uint32) *user {
 
 func userExists(uniqueKey string) bool {
 
-	userStorage := getUserStorageInstance()
+	userStorage := newUserStorage()
 
 	_, err := userStorage.getUserIdByUniqueKey(uniqueKey)
 	if err != nil {
@@ -43,7 +43,7 @@ func fetchOrCreateUser(uniqueKey string, groupId uint32) (*user, error) {
 
 func createUser(uniqueKey string, groupId uint32) (*user, error) {
 
-	userStorage := getUserStorageInstance()
+	userStorage := newUserStorage()
 
 	id, err := userStorage.createNewUserId()
 	if err != nil {
@@ -71,7 +71,7 @@ func createUser(uniqueKey string, groupId uint32) (*user, error) {
 
 func fetchUser(uniqueKey string) (*user, error) {
 
-	userStorage := getUserStorageInstance()
+	userStorage := newUserStorage()
 
 	userId, err := userStorage.getUserIdByUniqueKey(uniqueKey)
 	if err != nil {
@@ -91,7 +91,7 @@ func fetchUser(uniqueKey string) (*user, error) {
 
 func (u *user) remove() error {
 
-	userStorage := getUserStorageInstance()
+	userStorage := newUserStorage()
 
 	err := userStorage.removeUserInfoByUserId(u.info.Id)
 	if err != nil {
@@ -117,7 +117,7 @@ func (u *user) changeStatus(newStatus mark2.UserStatus) error {
 
 	if newStatus != u.info.Status {
 
-		userStorage := getUserStorageInstance()
+		userStorage := newUserStorage()
 
 		if u.info.Status != mark2.UserStatus_Logout {
 
