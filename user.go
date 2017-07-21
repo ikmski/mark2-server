@@ -14,6 +14,12 @@ func newUser() *user {
 	return u
 }
 
+func newUserWithUserId(id uint32) *user {
+	u := newUser()
+	u.info.Id = id
+	return u
+}
+
 func userExists(uniqueKey string) bool {
 
 	userStorage := getUserStorageInstance()

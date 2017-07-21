@@ -51,5 +51,13 @@ func TestServerLogin(t *testing.T) {
 		t.Errorf("got %v\nwant %v", ok, true)
 	}
 
+	logoutResult, err := c.Logout(context.Background(), result.AccessToken)
+	if err != nil {
+		t.Errorf("got %v\n", err)
+	}
+	if logoutResult == nil || logoutResult.Code != mark2.ResultCodes_OK {
+		t.Errorf("got %v\n", logoutResult)
+	}
+
 	userStorage.clear()
 }

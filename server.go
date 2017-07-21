@@ -45,7 +45,21 @@ func (s *messageServer) Login(ctx context.Context, req *mark2.LoginRequest) (*ma
 
 func (s *messageServer) Logout(ctx context.Context, token *mark2.AccessToken) (*mark2.Result, error) {
 
-	return new(mark2.Result), nil
+	claims, err := tokenDecode(token.Token)
+	if err != nil {
+		return nil, err
+	}
+
+	user := newUserWithUserId(claims.UserId)
+	err = user.remove()
+	if err != nil {
+		return nil, err
+	}
+
+	result := mark2.NewResult()
+	result.Code = mark2.ResultCodes_OK
+
+	return result, nil
 }
 
 func (s *messageServer) GetUserInfoList(ctx context.Context, token *mark2.AccessToken) (*mark2.UserInfoListResult, error) {
