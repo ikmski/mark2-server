@@ -23,25 +23,25 @@ func (us *userStorage) clear() {
 	us.s.clear()
 }
 
-func (us *userStorage) getUserIdByUniqueKey(uniqueKey string) (uint32, error) {
+func (us *userStorage) getUserIDByUniqueKey(uniqueKey string) (uint32, error) {
 
 	key := "user_id_by_unique_key." + uniqueKey
 	return us.s.getUint32(key)
 }
 
-func (us *userStorage) setUserIdByUniqueKey(uniqueKey string, userId uint32) error {
+func (us *userStorage) setUserIDByUniqueKey(uniqueKey string, userID uint32) error {
 
 	key := "user_id_by_unique_key." + uniqueKey
-	return us.s.setUint32(key, userId)
+	return us.s.setUint32(key, userID)
 }
 
-func (us *userStorage) removeUserIdByUniqueKey(uniqueKey string) error {
+func (us *userStorage) removeUserIDByUniqueKey(uniqueKey string) error {
 
 	key := "user_id_by_unique_key." + uniqueKey
 	return us.s.del(key)
 }
 
-func (us *userStorage) createNewUserId() (uint32, error) {
+func (us *userStorage) createNewUserID() (uint32, error) {
 
 	key := "max_user_id"
 
@@ -68,9 +68,9 @@ func (us *userStorage) createNewUserId() (uint32, error) {
 	return id, nil
 }
 
-func (us *userStorage) getUserInfoByUserId(userId uint32) (*mark2.UserInfo, error) {
+func (us *userStorage) getUserInfoByUserID(userID uint32) (*mark2.UserInfo, error) {
 
-	key := fmt.Sprintf("user_info_by_user_id.%d", userId)
+	key := fmt.Sprintf("user_info_by_user_id.%d", userID)
 
 	val, err := us.s.get(key)
 	if err != nil {
@@ -86,9 +86,9 @@ func (us *userStorage) getUserInfoByUserId(userId uint32) (*mark2.UserInfo, erro
 	return userInfo, nil
 }
 
-func (us *userStorage) setUserInfoByUserId(userId uint32, userInfo *mark2.UserInfo) error {
+func (us *userStorage) setUserInfoByUserID(userID uint32, userInfo *mark2.UserInfo) error {
 
-	key := fmt.Sprintf("user_info_by_user_id.%d", userId)
+	key := fmt.Sprintf("user_info_by_user_id.%d", userID)
 
 	buf, err := proto.Marshal(userInfo)
 	if err != nil {
@@ -98,16 +98,16 @@ func (us *userStorage) setUserInfoByUserId(userId uint32, userInfo *mark2.UserIn
 	return us.s.set(key, buf)
 }
 
-func (us *userStorage) removeUserInfoByUserId(userId uint32) error {
+func (us *userStorage) removeUserInfoByUserID(userID uint32) error {
 
-	key := fmt.Sprintf("user_info_by_user_id.%d", userId)
+	key := fmt.Sprintf("user_info_by_user_id.%d", userID)
 
 	return us.s.del(key)
 }
 
-func (us *userStorage) getUserInfoListByStatus(groupId uint32, status mark2.UserStatus) (*mark2.UserInfoList, error) {
+func (us *userStorage) getUserInfoListByStatus(groupID uint32, status mark2.UserStatus) (*mark2.UserInfoList, error) {
 
-	key := fmt.Sprintf("user_info_list_by_group_id.%d_status.%s", groupId, status.String())
+	key := fmt.Sprintf("user_info_list_by_group_id.%d_status.%s", groupID, status.String())
 
 	userInfoList := new(mark2.UserInfoList)
 
@@ -133,9 +133,9 @@ func (us *userStorage) getUserInfoListByStatus(groupId uint32, status mark2.User
 	return userInfoList, nil
 }
 
-func (us *userStorage) addUserInfoListByStatus(groupId uint32, status mark2.UserStatus, userInfo *mark2.UserInfo) error {
+func (us *userStorage) addUserInfoListByStatus(groupID uint32, status mark2.UserStatus, userInfo *mark2.UserInfo) error {
 
-	key := fmt.Sprintf("user_info_list_by_group_id.%d_status.%s", groupId, status.String())
+	key := fmt.Sprintf("user_info_list_by_group_id.%d_status.%s", groupID, status.String())
 
 	buf, err := proto.Marshal(userInfo)
 	if err != nil {
@@ -145,9 +145,9 @@ func (us *userStorage) addUserInfoListByStatus(groupId uint32, status mark2.User
 	return us.s.add(key, buf)
 }
 
-func (us *userStorage) removeUserInfoListByStatus(groupId uint32, status mark2.UserStatus, userInfo *mark2.UserInfo) error {
+func (us *userStorage) removeUserInfoListByStatus(groupID uint32, status mark2.UserStatus, userInfo *mark2.UserInfo) error {
 
-	key := fmt.Sprintf("user_info_list_by_group_id.%d_status.%s", groupId, status.String())
+	key := fmt.Sprintf("user_info_list_by_group_id.%d_status.%s", groupID, status.String())
 
 	buf, err := proto.Marshal(userInfo)
 	if err != nil {

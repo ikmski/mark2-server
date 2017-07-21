@@ -25,11 +25,11 @@ func TestServerLogin(t *testing.T) {
 	defer conn.Close()
 	c := mark2.NewMessageServiceClient(conn)
 
-	var groupId uint32 = 10001
+	var groupID uint32 = 10001
 	var uniqueKey string = "test_unique_key"
 
 	loginRequest := new(mark2.LoginRequest)
-	loginRequest.GroupId = groupId
+	loginRequest.GroupId = groupID
 	loginRequest.UniqueKey = uniqueKey
 
 	// Login

@@ -6,16 +6,16 @@ import (
 
 func TestTokenValid(t *testing.T) {
 
-	var groupId uint32 = 1001
-	var userId uint32 = 2001
+	var groupID uint32 = 1001
+	var userID uint32 = 2001
 	uniqueKey := "test_unique_key"
 	userName := "test_user_name"
 
 	subject := "test_subject"
 
 	claims01 := newTokenClaims()
-	claims01.GroupId = groupId
-	claims01.UserId = userId
+	claims01.GroupID = groupID
+	claims01.UserID = userID
 	claims01.UniqueKey = uniqueKey
 	claims01.UserName = userName
 	claims01.Subject = subject
@@ -37,16 +37,16 @@ func TestTokenValid(t *testing.T) {
 
 func TestTokenDecode(t *testing.T) {
 
-	var groupId uint32 = 1001
-	var userId uint32 = 2001
+	var groupID uint32 = 1001
+	var userID uint32 = 2001
 	uniqueKey := "test_unique_key"
 	userName := "test_user_name"
 
 	subject := "test_subject"
 
 	claims01 := newTokenClaims()
-	claims01.GroupId = groupId
-	claims01.UserId = userId
+	claims01.GroupID = groupID
+	claims01.UserID = userID
 	claims01.UniqueKey = uniqueKey
 	claims01.UserName = userName
 	claims01.Subject = subject
@@ -61,11 +61,11 @@ func TestTokenDecode(t *testing.T) {
 		t.Errorf("got %v\n", err)
 	}
 
-	if claims02.GroupId != groupId {
-		t.Errorf("got %v\nwant %v", claims02.GroupId, groupId)
+	if claims02.GroupID != groupID {
+		t.Errorf("got %v\nwant %v", claims02.GroupID, groupID)
 	}
-	if claims02.UserId != userId {
-		t.Errorf("got %v\nwant %v", claims02.UserId, userId)
+	if claims02.UserID != userID {
+		t.Errorf("got %v\nwant %v", claims02.UserID, userID)
 	}
 	if claims02.UniqueKey != uniqueKey {
 		t.Errorf("got %v\nwant %v", claims02.UniqueKey, uniqueKey)

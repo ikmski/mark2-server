@@ -6,49 +6,49 @@ import (
 	mark2 "github.com/ikmski/mark2-server/proto"
 )
 
-func TestUserStorageUserIdByUniquekey(t *testing.T) {
+func TestUserStorageUserIDByUniquekey(t *testing.T) {
 
 	uniqueKey := "test_unique_key"
-	var userId uint32 = 1001
+	var userID uint32 = 1001
 
 	userStorage := newUserStorage()
 	userStorage.clear()
 
-	_, err := userStorage.getUserIdByUniqueKey(uniqueKey)
+	_, err := userStorage.getUserIDByUniqueKey(uniqueKey)
 	if err == nil {
 		t.Errorf("got %v\n", err)
 	}
 
-	err = userStorage.setUserIdByUniqueKey(uniqueKey, userId)
+	err = userStorage.setUserIDByUniqueKey(uniqueKey, userID)
 	if err != nil {
 		t.Errorf("got %v\n", err)
 	}
 
-	v, err := userStorage.getUserIdByUniqueKey(uniqueKey)
+	v, err := userStorage.getUserIDByUniqueKey(uniqueKey)
 	if err != nil {
 		t.Errorf("got %v\n", err)
 	}
-	if v != userId {
-		t.Errorf("got %v\nwant %v", v, userId)
+	if v != userID {
+		t.Errorf("got %v\nwant %v", v, userID)
 	}
 
-	err = userStorage.removeUserIdByUniqueKey(uniqueKey)
+	err = userStorage.removeUserIDByUniqueKey(uniqueKey)
 	if err != nil {
 		t.Errorf("got %v\n", err)
 	}
 
-	_, err = userStorage.getUserIdByUniqueKey(uniqueKey)
+	_, err = userStorage.getUserIDByUniqueKey(uniqueKey)
 	if err == nil {
 		t.Errorf("got %v\n", err)
 	}
 }
 
-func TestUserStorageCreateNewUserId(t *testing.T) {
+func TestUserStorageCreateNewUserID(t *testing.T) {
 
 	userStorage := newUserStorage()
 	userStorage.clear()
 
-	id, err := userStorage.createNewUserId()
+	id, err := userStorage.createNewUserID()
 	if err != nil {
 		t.Errorf("got %v\n", err)
 	}
@@ -56,7 +56,7 @@ func TestUserStorageCreateNewUserId(t *testing.T) {
 		t.Errorf("got %v\nwant %v", id, 1000001)
 	}
 
-	id, err = userStorage.createNewUserId()
+	id, err = userStorage.createNewUserID()
 	if err != nil {
 		t.Errorf("got %v\n", err)
 	}
@@ -64,7 +64,7 @@ func TestUserStorageCreateNewUserId(t *testing.T) {
 		t.Errorf("got %v\nwant %v", id, 1000002)
 	}
 
-	id, err = userStorage.createNewUserId()
+	id, err = userStorage.createNewUserID()
 	if err != nil {
 		t.Errorf("got %v\n", err)
 	}
@@ -80,7 +80,7 @@ func TestUserStorageUserInfo(t *testing.T) {
 	userStorage1.clear()
 	userStorage2.clear()
 
-	userId, err := userStorage1.createNewUserId()
+	userID, err := userStorage1.createNewUserID()
 	if err != nil {
 		t.Errorf("got %v\n", err)
 	}
@@ -90,12 +90,12 @@ func TestUserStorageUserInfo(t *testing.T) {
 	userInfo.GroupId = 1111
 	userInfo.Id = 2222
 
-	err = userStorage1.setUserInfoByUserId(userId, userInfo)
+	err = userStorage1.setUserInfoByUserID(userID, userInfo)
 	if err != nil {
 		t.Errorf("got %v\n", err)
 	}
 
-	info, err := userStorage2.getUserInfoByUserId(userId)
+	info, err := userStorage2.getUserInfoByUserID(userID)
 	if err != nil {
 		t.Errorf("got %v\n", err)
 	}
@@ -107,7 +107,7 @@ func TestUserStorageUserInfo(t *testing.T) {
 		t.Errorf("got %v\nwant %v", info.Id, userInfo.Id)
 	}
 
-	err = userStorage1.removeUserInfoByUserId(userId)
+	err = userStorage1.removeUserInfoByUserID(userID)
 	if err != nil {
 		t.Errorf("got %v\n", err)
 	}

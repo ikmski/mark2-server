@@ -3,7 +3,6 @@ package main
 import (
 	"bytes"
 	"encoding/binary"
-	"errors"
 	"fmt"
 	"sync"
 )
@@ -14,7 +13,7 @@ type storage struct {
 	setData map[string]([][]byte)
 }
 
-var storageInstance *storage = newStorage()
+var storageInstance = newStorage()
 
 func newStorage() *storage {
 	s := new(storage)
@@ -68,7 +67,7 @@ func (s *storage) get(key string) ([]byte, error) {
 
 	val, ok := s.mapData[key]
 	if !ok {
-		err := errors.New(fmt.Sprintf("%s not found\n", key))
+		err := fmt.Errorf("%s not found", key)
 		return nil, err
 	}
 
@@ -134,7 +133,7 @@ func (s *storage) members(key string) ([][]byte, error) {
 
 	val, ok := s.setData[key]
 	if !ok {
-		err := errors.New(fmt.Sprintf("%s not found\n", key))
+		err := fmt.Errorf("%s not found", key)
 		return nil, err
 	}
 
@@ -217,7 +216,7 @@ func (s *storage) remove(key string, value []byte) error {
 
 	set, ok := s.setData[key]
 	if !ok {
-		err := errors.New(fmt.Sprintf("%s not found\n", key))
+		err := fmt.Errorf("%s not found", key)
 		return err
 	}
 
@@ -268,9 +267,9 @@ func (s *storage) delMap(key string) error {
 	if has {
 		delete(s.mapData, key)
 		return nil
-	} else {
-		return errors.New(fmt.Sprintf("%s not found\n", key))
 	}
+
+	return fmt.Errorf("%s not found", key)
 }
 
 func (s *storage) delSet(key string) error {
@@ -278,7 +277,7 @@ func (s *storage) delSet(key string) error {
 	if has {
 		delete(s.setData, key)
 		return nil
-	} else {
-		return errors.New(fmt.Sprintf("%s not found\n", key))
 	}
+
+	return fmt.Errorf("%s not found", key)
 }

@@ -5,7 +5,7 @@ import mark2 "github.com/ikmski/mark2-server/proto"
 type user struct {
 	uniqueKey string
 	info      *mark2.UserInfo
-	roomId    uint32
+	roomID    uint32
 }
 
 func newUser() *user {
@@ -14,7 +14,7 @@ func newUser() *user {
 	return u
 }
 
-func newUserWithUserId(id uint32) *user {
+func newUserWithUserID(id uint32) *user {
 	u := newUser()
 	u.info.Id = id
 	return u
@@ -24,7 +24,7 @@ func userExists(uniqueKey string) bool {
 
 	userStorage := newUserStorage()
 
-	_, err := userStorage.getUserIdByUniqueKey(uniqueKey)
+	_, err := userStorage.getUserIDByUniqueKey(uniqueKey)
 	if err != nil {
 		return false
 	}
@@ -32,20 +32,20 @@ func userExists(uniqueKey string) bool {
 	return true
 }
 
-func fetchOrCreateUser(uniqueKey string, groupId uint32) (*user, error) {
+func fetchOrCreateUser(uniqueKey string, groupID uint32) (*user, error) {
 
 	exists := userExists(uniqueKey)
 	if exists {
 		return fetchUser(uniqueKey)
 	}
-	return createUser(uniqueKey, groupId)
+	return createUser(uniqueKey, groupID)
 }
 
-func createUser(uniqueKey string, groupId uint32) (*user, error) {
+func createUser(uniqueKey string, groupID uint32) (*user, error) {
 
 	userStorage := newUserStorage()
 
-	id, err := userStorage.createNewUserId()
+	id, err := userStorage.createNewUserID()
 	if err != nil {
 		return nil, err
 	}
@@ -53,15 +53,15 @@ func createUser(uniqueKey string, groupId uint32) (*user, error) {
 	// ユーザ作成
 	user := newUser()
 	user.uniqueKey = uniqueKey
-	user.info.GroupId = groupId
+	user.info.GroupId = groupID
 	user.info.Id = id
 
 	// 保存
-	err = userStorage.setUserInfoByUserId(id, user.info)
+	err = userStorage.setUserInfoByUserID(id, user.info)
 	if err != nil {
 		return nil, err
 	}
-	err = userStorage.setUserIdByUniqueKey(uniqueKey, id)
+	err = userStorage.setUserIDByUniqueKey(uniqueKey, id)
 	if err != nil {
 		return nil, err
 	}
@@ -73,7 +73,7 @@ func fetchUser(uniqueKey string) (*user, error) {
 
 	userStorage := newUserStorage()
 
-	userId, err := userStorage.getUserIdByUniqueKey(uniqueKey)
+	userID, err := userStorage.getUserIDByUniqueKey(uniqueKey)
 	if err != nil {
 		return nil, err
 	}
@@ -81,7 +81,7 @@ func fetchUser(uniqueKey string) (*user, error) {
 	user := newUser()
 	user.uniqueKey = uniqueKey
 
-	user.info, err = userStorage.getUserInfoByUserId(userId)
+	user.info, err = userStorage.getUserInfoByUserID(userID)
 	if err != nil {
 		return nil, err
 	}
@@ -93,7 +93,7 @@ func (u *user) remove() error {
 
 	userStorage := newUserStorage()
 
-	err := userStorage.removeUserInfoByUserId(u.info.Id)
+	err := userStorage.removeUserInfoByUserID(u.info.Id)
 	if err != nil {
 		return err
 	}
@@ -105,7 +105,7 @@ func (u *user) remove() error {
 		}
 	}
 
-	err = userStorage.removeUserIdByUniqueKey(u.uniqueKey)
+	err = userStorage.removeUserIDByUniqueKey(u.uniqueKey)
 	if err != nil {
 		return err
 	}
@@ -130,7 +130,7 @@ func (u *user) changeStatus(newStatus mark2.UserStatus) error {
 
 		u.info.Status = newStatus
 
-		err := userStorage.setUserInfoByUserId(u.info.Id, u.info)
+		err := userStorage.setUserInfoByUserID(u.info.Id, u.info)
 		if err != nil {
 			return err
 		}

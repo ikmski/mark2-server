@@ -1,17 +1,16 @@
 package main
 
 import (
-	"errors"
 	"fmt"
 
 	jwt "github.com/dgrijalva/jwt-go"
 )
 
-var mySigningKey []byte = []byte("MySigningKey") // TODO
+var mySigningKey = []byte("MySigningKey") // TODO
 
 type tokenClaims struct {
-	GroupId   uint32 `json:"group_id"`
-	UserId    uint32 `json:"user_id"`
+	GroupID   uint32 `json:"group_id"`
+	UserID    uint32 `json:"user_id"`
 	UniqueKey string `json:"unique_key"`
 	UserName  string `json:"user_name"`
 	jwt.StandardClaims
@@ -45,13 +44,12 @@ func tokenDecode(str string) (*tokenClaims, error) {
 	}
 
 	tc, ok := token.Claims.(*tokenClaims)
-	if ok && token.Valid {
-		return tc, nil
-
-	} else {
-		err := errors.New(fmt.Sprintf("token is invalid"))
+	if !ok || !token.Valid {
+		err := fmt.Errorf("token is invalid")
 		return nil, err
 	}
+
+	return tc, nil
 }
 
 func tokenVerify(str string) (bool, error) {
@@ -65,11 +63,10 @@ func tokenVerify(str string) (bool, error) {
 	}
 
 	_, ok := token.Claims.(*tokenClaims)
-	if ok && token.Valid {
-		return true, nil
-
-	} else {
-		err := errors.New(fmt.Sprintf("token is invalid"))
+	if !ok || !token.Valid {
+		err := fmt.Errorf("token is invalid")
 		return false, err
 	}
+
+	return true, nil
 }

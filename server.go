@@ -27,8 +27,8 @@ func (s *messageServer) Login(ctx context.Context, req *mark2.LoginRequest) (*ma
 
 	// Create access token
 	claim := newTokenClaims()
-	claim.GroupId = user.info.GroupId
-	claim.UserId = user.info.Id
+	claim.GroupID = user.info.GroupId
+	claim.UserID = user.info.Id
 	claim.UniqueKey = user.uniqueKey
 	token, err := claim.encode()
 	if err != nil {
@@ -51,7 +51,7 @@ func (s *messageServer) Logout(ctx context.Context, token *mark2.AccessToken) (*
 	}
 
 	// Remove user
-	user := newUserWithUserId(claims.UserId)
+	user := newUserWithUserID(claims.UserID)
 	err = user.remove()
 	if err != nil {
 		return result, err
