@@ -28,22 +28,32 @@ func TestServerLogin(t *testing.T) {
 	var groupId uint32 = 10001
 	var uniqueKey string = "test_unique_key"
 
-	request := new(mark2.LoginRequest)
-	request.GroupId = groupId
-	request.UniqueKey = uniqueKey
+	loginRequest := new(mark2.LoginRequest)
+	loginRequest.GroupId = groupId
+	loginRequest.UniqueKey = uniqueKey
 
-	result, err := c.Login(context.Background(), request)
+	// Login
+	loginResult, err := c.Login(context.Background(), loginRequest)
 	if err != nil {
 		t.Errorf("got %v\n", err)
 	}
-	if result.Result == nil || result.Result.Code != mark2.ResultCodes_OK {
-		t.Errorf("got %v\n", result)
+	if loginResult == nil {
+		t.Errorf("got %v\n", loginResult)
+	}
+	if loginResult.Result == nil {
+		t.Errorf("got %v\n", loginResult.Result)
+	}
+	if loginResult.Result.Code != mark2.ResultCodes_OK {
+		t.Errorf("got %v\n", loginResult.Result.Code)
+	}
+	if loginResult.AccessToken == nil {
+		t.Errorf("got %v\n", loginResult.AccessToken)
+	}
+	if loginResult.AccessToken.Token == "" {
+		t.Errorf("got %v\n", loginResult.AccessToken.Token)
 	}
 
-	if result.AccessToken == nil || result.AccessToken.Token == "" {
-		t.Errorf("got %v\n", result)
-	}
-	ok, err := tokenVerify(result.AccessToken.Token)
+	ok, err := tokenVerify(loginResult.AccessToken.Token)
 	if err != nil {
 		t.Errorf("got %v\n", err)
 	}
@@ -51,12 +61,16 @@ func TestServerLogin(t *testing.T) {
 		t.Errorf("got %v\nwant %v", ok, true)
 	}
 
-	logoutResult, err := c.Logout(context.Background(), result.AccessToken)
+	// Logout
+	logoutResult, err := c.Logout(context.Background(), loginResult.AccessToken)
 	if err != nil {
 		t.Errorf("got %v\n", err)
 	}
-	if logoutResult == nil || logoutResult.Code != mark2.ResultCodes_OK {
+	if logoutResult == nil {
 		t.Errorf("got %v\n", logoutResult)
+	}
+	if logoutResult.Code != mark2.ResultCodes_OK {
+		t.Errorf("got %v\n", logoutResult.Code)
 	}
 
 	userStorage.clear()

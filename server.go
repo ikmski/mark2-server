@@ -1,8 +1,6 @@
 package main
 
 import (
-	"fmt"
-
 	mark2 "github.com/ikmski/mark2-server/proto"
 	"golang.org/x/net/context"
 )
@@ -17,46 +15,48 @@ func newServer() *messageServer {
 
 func (s *messageServer) Login(ctx context.Context, req *mark2.LoginRequest) (*mark2.LoginResult, error) {
 
-	u, err := fetchOrCreateUser(req.UniqueKey, req.GroupId)
+	result := mark2.NewLoginResult()
+
+	user, err := fetchOrCreateUser(req.UniqueKey, req.GroupId)
 	if err != nil {
-		return nil, err
+		return result, err
 	}
 
-	// Status をログインに変更
-	fmt.Printf("%v\n", u)
-	u.changeStatus(mark2.UserStatus_Login)
+	// Change user status Login
+	user.changeStatus(mark2.UserStatus_Login)
 
-	// Toke 作成
+	// Create access token
 	claim := newTokenClaims()
-	claim.GroupId = u.info.GroupId
-	claim.UserId = u.info.Id
-	claim.UniqueKey = u.uniqueKey
+	claim.GroupId = user.info.GroupId
+	claim.UserId = user.info.Id
+	claim.UniqueKey = user.uniqueKey
 	token, err := claim.encode()
 	if err != nil {
-		return nil, err
+		return result, err
 	}
 
-	result := mark2.NewLoginResult()
-	result.Result.Code = mark2.ResultCodes_OK
 	result.AccessToken.Token = token
+	result.Result.Code = mark2.ResultCodes_OK
 
 	return result, nil
 }
 
 func (s *messageServer) Logout(ctx context.Context, token *mark2.AccessToken) (*mark2.Result, error) {
 
+	result := mark2.NewResult()
+
 	claims, err := tokenDecode(token.Token)
 	if err != nil {
-		return nil, err
+		return result, err
 	}
 
+	// Remove user
 	user := newUserWithUserId(claims.UserId)
 	err = user.remove()
 	if err != nil {
-		return nil, err
+		return result, err
 	}
 
-	result := mark2.NewResult()
 	result.Code = mark2.ResultCodes_OK
 
 	return result, nil
