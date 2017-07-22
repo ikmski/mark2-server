@@ -53,10 +53,11 @@ message UserInfoList {
 
 // ルーム情報
 message RoomInfo {
-    uint32 id = 1;
-    uint32 capacity = 2;
-    RoomStatus status = 3;
-    repeated uint32 user_id_list = 4;
+    uint32 group_id = 1;
+    uint32 id = 2;
+    uint32 capacity = 3;
+    RoomStatus status = 4;
+    repeated uint32 user_id_list = 5;
 }
 
 // ルーム情報リスト
