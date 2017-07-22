@@ -109,7 +109,7 @@ func (us *userStorage) getUserInfoListByStatus(groupID uint32, status mark2.User
 
 	key := fmt.Sprintf("user_info_list_by_group_id.%d_status.%s", groupID, status.String())
 
-	userInfoList := new(mark2.UserInfoList)
+	userInfoList := mark2.NewUserInfoList()
 
 	has := us.s.has(key)
 	if has {
