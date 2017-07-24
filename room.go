@@ -46,6 +46,25 @@ func createRoom(groupID uint32, capacity uint32) (*room, error) {
 	return room, nil
 }
 
+func (r *room) remove() error {
+
+	roomStorage := newRoomStorage()
+
+	err := roomStorage.removeRoomInfoByRoomID(r.info.Id)
+	if err != nil {
+		return err
+	}
+
+	if r.info.Status != mark2.RoomStatus_CLOSED {
+		err = roomStorage.removeRoomInfoListByStatus(r.info.GroupId, r.info.Status, r.info)
+		if err != nil {
+			return err
+		}
+	}
+
+	return nil
+}
+
 func (r *room) canJoin() bool {
 
 	if r.info == nil {

@@ -25,4 +25,8 @@ func TestRoomCreateRoom(t *testing.T) {
 		t.Errorf("got %v\nwant %v", room.info.Status, mark2.RoomStatus_CLOSED)
 	}
 
+	err = room.remove()
+	if err != nil {
+		t.Errorf("got %v\n", err)
+	}
 }
