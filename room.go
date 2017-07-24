@@ -22,7 +22,11 @@ func newRoomWithRoomID(id uint32) *room {
 	return r
 }
 
-func createRoom(groupID uint32, capacity uint32) (*room, error) {
+func createRoom(groupID uint32, capacity uint32, userID uint32) (*room, error) {
+
+	if capacity == 0 {
+		return nil, fmt.Errorf("capacity must be greater than 0")
+	}
 
 	roomStorage := newRoomStorage()
 
@@ -36,6 +40,14 @@ func createRoom(groupID uint32, capacity uint32) (*room, error) {
 	room.info.GroupId = groupID
 	room.info.Capacity = capacity
 	room.info.UserIdList = make([]uint32, 0, capacity)
+	room.info.UserIdList = append(room.info.UserIdList, userID)
+
+	// Status
+	room.info.Status = mark2.RoomStatus_OPEN
+	err = roomStorage.addRoomInfoListByStatus(room.info.GroupId, room.info.Status, room.info)
+	if err != nil {
+		return nil, err
+	}
 
 	// 保存
 	err = roomStorage.setRoomInfoByRoomID(id, room.info)
@@ -76,17 +88,14 @@ func (r *room) canJoin() bool {
 
 func (r *room) join(userID uint32) error {
 
-	if !r.canJoin() {
-		err := fmt.Errorf("cannot join the room [roomID: %d]", r.info.Id)
-		return err
-	}
-
 	roomStorage := newRoomStorage()
 
 	// 一旦リストから抜ける
-	err := roomStorage.removeRoomInfoListByStatus(r.info.GroupId, r.info.Status, r.info)
-	if err != nil {
-		return err
+	if r.info.Status != mark2.RoomStatus_CLOSED {
+		err := roomStorage.removeRoomInfoListByStatus(r.info.GroupId, r.info.Status, r.info)
+		if err != nil {
+			return err
+		}
 	}
 
 	r.info.UserIdList = append(r.info.UserIdList, userID)
@@ -101,7 +110,7 @@ func (r *room) join(userID uint32) error {
 		}
 	}
 
-	err = roomStorage.setRoomInfoByRoomID(r.info.Id, r.info)
+	err := roomStorage.setRoomInfoByRoomID(r.info.Id, r.info)
 	if err != nil {
 		return err
 	}
@@ -114,9 +123,11 @@ func (r *room) exit(userID uint32) error {
 	roomStorage := newRoomStorage()
 
 	// 一旦リストから抜ける
-	err := roomStorage.removeRoomInfoListByStatus(r.info.GroupId, r.info.Status, r.info)
-	if err != nil {
-		return err
+	if r.info.Status != mark2.RoomStatus_CLOSED {
+		err := roomStorage.removeRoomInfoListByStatus(r.info.GroupId, r.info.Status, r.info)
+		if err != nil {
+			return err
+		}
 	}
 
 	newList := make([]uint32, 0, r.info.Capacity)

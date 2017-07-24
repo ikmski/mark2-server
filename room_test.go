@@ -10,8 +10,9 @@ func TestRoomCreateRoom(t *testing.T) {
 
 	var groupID uint32 = 1001
 	var capacity uint32 = 3
+	var userID uint32 = 10001
 
-	room, err := createRoom(groupID, capacity)
+	room, err := createRoom(groupID, capacity, userID)
 	if err != nil {
 		t.Errorf("got %v\n", err)
 	}
@@ -21,8 +22,100 @@ func TestRoomCreateRoom(t *testing.T) {
 	if room.info.Capacity != capacity {
 		t.Errorf("got %v\nwant %v", room.info.Capacity, capacity)
 	}
-	if room.info.Status != mark2.RoomStatus_CLOSED {
-		t.Errorf("got %v\nwant %v", room.info.Status, mark2.RoomStatus_CLOSED)
+	if room.info.Status != mark2.RoomStatus_OPEN {
+		t.Errorf("got %v\nwant %v", room.info.Status, mark2.RoomStatus_OPEN)
+	}
+
+	err = room.remove()
+	if err != nil {
+		t.Errorf("got %v\n", err)
+	}
+}
+
+func TestRoomJoinRoom(t *testing.T) {
+
+	var groupID uint32 = 1001
+	var capacity uint32 = 3
+
+	var userID1 uint32 = 10001
+	var userID2 uint32 = 10002
+	var userID3 uint32 = 10003
+
+	room, err := createRoom(groupID, capacity, userID1)
+	if err != nil {
+		t.Errorf("got %v\n", err)
+	}
+	canJoin := room.canJoin()
+	if !canJoin {
+		t.Errorf("got %v\nwant %v", canJoin, true)
+	}
+
+	err = room.join(userID2)
+	if err != nil {
+		t.Errorf("got %v\n", err)
+	}
+	canJoin = room.canJoin()
+	if !canJoin {
+		t.Errorf("got %v\nwant %v", canJoin, true)
+	}
+
+	err = room.join(userID3)
+	if err != nil {
+		t.Errorf("got %v\n", err)
+	}
+	canJoin = room.canJoin()
+	if canJoin {
+		t.Errorf("got %v\nwant %v", canJoin, false)
+	}
+
+	err = room.remove()
+	if err != nil {
+		t.Errorf("got %v\n", err)
+	}
+}
+
+func TestRoomExitRoom(t *testing.T) {
+
+	var groupID uint32 = 1001
+	var capacity uint32 = 2
+
+	var userID1 uint32 = 10001
+	var userID2 uint32 = 10002
+
+	room, err := createRoom(groupID, capacity, userID1)
+	if err != nil {
+		t.Errorf("got %v\n", err)
+	}
+	canJoin := room.canJoin()
+	if !canJoin {
+		t.Errorf("got %v\nwant %v", canJoin, true)
+	}
+
+	err = room.join(userID2)
+	if err != nil {
+		t.Errorf("got %v\n", err)
+	}
+	canJoin = room.canJoin()
+	if canJoin {
+		t.Errorf("got %v\nwant %v", canJoin, false)
+	}
+
+	err = room.exit(userID2)
+	if err != nil {
+		t.Errorf("got %v\n", err)
+	}
+	canJoin = room.canJoin()
+	if !canJoin {
+		t.Errorf("got %v\nwant %v", canJoin, true)
+	}
+
+	err = room.exit(userID1)
+	if err != nil {
+		t.Errorf("got %v\n", err)
+	}
+	canJoin = room.canJoin()
+	if canJoin {
+		t.Errorf("got %v\nwant %v", canJoin, false)
 	}
 
 	err = room.remove()
