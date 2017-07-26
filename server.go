@@ -1,6 +1,9 @@
 package main
 
 import (
+	"fmt"
+	"time"
+
 	mark2 "github.com/ikmski/mark2-server/proto"
 	"golang.org/x/net/context"
 )
@@ -116,5 +119,33 @@ func (s *messageServer) SendStream(srv mark2.MessageService_SendStreamServer) er
 
 func (s *messageServer) WaitMessage(token *mark2.AccessToken, srv mark2.MessageService_WaitMessageServer) error {
 
-	return nil
+	claims, err := tokenDecode(token.Token)
+	if err != nil {
+		return err
+	}
+
+	waitStreams := getWaitStreamsInstance()
+	waitStreams.set(claims.UserID, &srv)
+
+	for {
+
+		ctx := srv.Context()
+		select {
+		case <-ctx.Done():
+			err = ctx.Err()
+			fmt.Printf("Connection broken: %v\n", err)
+			break
+		}
+
+		has := getUsersInstance().has(claims.UserID)
+		if !has {
+			fmt.Printf("User was loged out\n")
+			break
+		}
+
+		time.Sleep(1 * time.Second)
+	}
+
+	waitStreams.del(claims.UserID)
+	return err
 }
