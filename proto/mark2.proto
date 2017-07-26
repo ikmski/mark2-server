@@ -12,16 +12,15 @@ enum ResultCodes {
 
 // ユーザステータス
 enum UserStatus {
-    Logout = 0;    // ログアウト
-    Login = 1;     // ログイン
-    WaitMatch = 2; // マッチング待ち
-    Matching = 3;  // マッチング済み
+    Login = 0;     // ログイン
+    WaitMatch = 1; // マッチング待ち
+    Matched = 2;   // マッチング済み
 }
 
 // ルームステータス
 enum RoomStatus {
-    CLOSED = 0; // クローズド
-    OPEN = 1;   // オープン
+    OPEN = 0;   // オープン
+    CLOSED = 1; // クローズド
 }
 
 // メッセージタイプ
@@ -83,7 +82,6 @@ message MessageList {
 // ログインリクエスト
 message LoginRequest {
     uint32 group_id = 1;
-    string unique_key = 2;
 }
 
 // ルーム作成リクエスト
