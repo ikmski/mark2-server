@@ -12,9 +12,7 @@ import (
 
 func TestServerLogin(t *testing.T) {
 
-	// clear Storage
-	userStorage := newUserStorage()
-	userStorage.clear()
+	initializeUserID()
 
 	// Set up a connection to the Server.
 	const address = "localhost:50051"
@@ -26,11 +24,9 @@ func TestServerLogin(t *testing.T) {
 	c := mark2.NewMessageServiceClient(conn)
 
 	var groupID uint32 = 10001
-	var uniqueKey string = "test_unique_key"
 
 	loginRequest := new(mark2.LoginRequest)
 	loginRequest.GroupId = groupID
-	loginRequest.UniqueKey = uniqueKey
 
 	// Login
 	loginResult, err := c.Login(context.Background(), loginRequest)
@@ -73,5 +69,4 @@ func TestServerLogin(t *testing.T) {
 		t.Errorf("got %v\n", logoutResult.Code)
 	}
 
-	userStorage.clear()
 }

@@ -3,9 +3,8 @@ package main
 import mark2 "github.com/ikmski/mark2-server/proto"
 
 type user struct {
-	uniqueKey string
-	info      *mark2.UserInfo
-	roomID    uint32
+	info   *mark2.UserInfo
+	roomID uint32
 }
 
 func newUser() *user {
@@ -14,74 +13,22 @@ func newUser() *user {
 	return u
 }
 
-func newUserWithUserID(id uint32) *user {
-	u := newUser()
-	u.info.Id = id
-	return u
-}
+func createUser(groupID uint32) (*user, error) {
 
-func userExists(uniqueKey string) bool {
+	newID := issueUserID()
 
-	userStorage := newUserStorage()
-
-	_, err := userStorage.getUserIDByUniqueKey(uniqueKey)
-	if err != nil {
-		return false
-	}
-
-	return true
-}
-
-func fetchOrCreateUser(uniqueKey string, groupID uint32) (*user, error) {
-
-	exists := userExists(uniqueKey)
-	if exists {
-		return fetchUser(uniqueKey)
-	}
-	return createUser(uniqueKey, groupID)
-}
-
-func createUser(uniqueKey string, groupID uint32) (*user, error) {
-
-	userStorage := newUserStorage()
-
-	id, err := userStorage.createNewUserID()
-	if err != nil {
-		return nil, err
-	}
-
-	// ユーザ作成
 	user := newUser()
-	user.uniqueKey = uniqueKey
 	user.info.GroupId = groupID
-	user.info.Id = id
+	user.info.Id = newID
 
-	// 保存
-	err = userStorage.setUserInfoByUserID(id, user.info)
-	if err != nil {
-		return nil, err
-	}
-	err = userStorage.setUserIDByUniqueKey(uniqueKey, id)
+	userIDList := getUserIDListInstance()
+	err := userIDList.add(user.info.GroupId, user.info.Status, user.info.Id)
 	if err != nil {
 		return nil, err
 	}
 
-	return user, nil
-}
-
-func fetchUser(uniqueKey string) (*user, error) {
-
-	userStorage := newUserStorage()
-
-	userID, err := userStorage.getUserIDByUniqueKey(uniqueKey)
-	if err != nil {
-		return nil, err
-	}
-
-	user := newUser()
-	user.uniqueKey = uniqueKey
-
-	user.info, err = userStorage.getUserInfoByUserID(userID)
+	users := getUsersInstance()
+	err = users.set(user.info.Id, user)
 	if err != nil {
 		return nil, err
 	}
@@ -91,21 +38,14 @@ func fetchUser(uniqueKey string) (*user, error) {
 
 func (u *user) remove() error {
 
-	userStorage := newUserStorage()
-
-	err := userStorage.removeUserInfoByUserID(u.info.Id)
+	userIDList := getUserIDListInstance()
+	err := userIDList.remove(u.info.GroupId, u.info.Status, u.info.Id)
 	if err != nil {
 		return err
 	}
 
-	if u.info.Status != mark2.UserStatus_Logout {
-		err = userStorage.removeUserInfoListByStatus(u.info.GroupId, u.info.Status, u.info)
-		if err != nil {
-			return err
-		}
-	}
-
-	err = userStorage.removeUserIDByUniqueKey(u.uniqueKey)
+	users := getUsersInstance()
+	err = users.del(u.info.Id)
 	if err != nil {
 		return err
 	}
@@ -117,31 +57,18 @@ func (u *user) changeStatus(newStatus mark2.UserStatus) error {
 
 	if newStatus != u.info.Status {
 
-		userStorage := newUserStorage()
+		userIDList := getUserIDListInstance()
 
-		if u.info.Status != mark2.UserStatus_Logout {
-
-			err := userStorage.removeUserInfoListByStatus(u.info.GroupId, u.info.Status, u.info)
-			if err != nil {
-				return err
-			}
-
-		}
-
-		u.info.Status = newStatus
-
-		err := userStorage.setUserInfoByUserID(u.info.Id, u.info)
+		err := userIDList.remove(u.info.GroupId, u.info.Status, u.info.Id)
 		if err != nil {
 			return err
 		}
 
-		if newStatus != mark2.UserStatus_Logout {
+		u.info.Status = newStatus
 
-			err = userStorage.addUserInfoListByStatus(u.info.GroupId, u.info.Status, u.info)
-			if err != nil {
-				return err
-			}
-
+		err = userIDList.add(u.info.GroupId, u.info.Status, u.info.Id)
+		if err != nil {
+			return err
 		}
 	}
 

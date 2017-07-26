@@ -17,19 +17,15 @@ func (s *messageServer) Login(ctx context.Context, req *mark2.LoginRequest) (*ma
 
 	result := mark2.NewLoginResult()
 
-	user, err := fetchOrCreateUser(req.UniqueKey, req.GroupId)
+	user, err := createUser(req.GroupId)
 	if err != nil {
 		return result, err
 	}
-
-	// Change user status Login
-	user.changeStatus(mark2.UserStatus_Login)
 
 	// Create access token
 	claim := newTokenClaims()
 	claim.GroupID = user.info.GroupId
 	claim.UserID = user.info.Id
-	claim.UniqueKey = user.uniqueKey
 	token, err := claim.encode()
 	if err != nil {
 		return result, err
@@ -50,12 +46,18 @@ func (s *messageServer) Logout(ctx context.Context, token *mark2.AccessToken) (*
 		return result, err
 	}
 
+	// User
+	user, err := getUsersInstance().get(claims.UserID)
+	if err != nil {
+		return result, err
+	}
+
 	// Remove user
-	user := newUserWithUserID(claims.UserID)
 	err = user.remove()
 	if err != nil {
 		return result, err
 	}
+	user = nil
 
 	result.Code = mark2.ResultCodes_OK
 

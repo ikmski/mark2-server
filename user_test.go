@@ -9,22 +9,16 @@ import (
 func TestUserCreateUser(t *testing.T) {
 
 	var groupId uint32 = 1001
-	var uniqueKey string = "test_unique_key"
 
-	exists := userExists(uniqueKey)
-	if exists {
-		t.Errorf("got %v\nwant %v", exists, false)
-	}
-
-	user, err := createUser(uniqueKey, groupId)
+	user, err := createUser(groupId)
 	if err != nil {
 		t.Errorf("got %v\n", err)
 	}
 	if user.info.GroupId != groupId {
 		t.Errorf("got %v\nwant %v", user.info.GroupId, groupId)
 	}
-	if user.info.Status != mark2.UserStatus_Logout {
-		t.Errorf("got %v\nwant %v", user.info.Status, mark2.UserStatus_Logout)
+	if user.info.Status != mark2.UserStatus_Login {
+		t.Errorf("got %v\nwant %v", user.info.Status, mark2.UserStatus_Login)
 	}
 
 	err = user.remove()
@@ -36,32 +30,26 @@ func TestUserCreateUser(t *testing.T) {
 func TestUserChangeStatus(t *testing.T) {
 
 	var groupId uint32 = 1001
-	var uniqueKey string = "test_unique_key"
 
-	exists := userExists(uniqueKey)
-	if exists {
-		t.Errorf("got %v\nwant %v", exists, false)
-	}
-
-	user, err := createUser(uniqueKey, groupId)
+	user, err := createUser(groupId)
 	if err != nil {
 		t.Errorf("got %v\n", err)
 	}
 
-	err = user.changeStatus(mark2.UserStatus_Login)
+	err = user.changeStatus(mark2.UserStatus_WaitMatch)
 	if err != nil {
 		t.Errorf("got %v\n", err)
 	}
-	if user.info.Status != mark2.UserStatus_Login {
-		t.Errorf("got %v\nwant %v", user.info.Status, mark2.UserStatus_Login)
+	if user.info.Status != mark2.UserStatus_WaitMatch {
+		t.Errorf("got %v\nwant %v", user.info.Status, mark2.UserStatus_WaitMatch)
 	}
 
-	err = user.changeStatus(mark2.UserStatus_Logout)
+	err = user.changeStatus(mark2.UserStatus_Matched)
 	if err != nil {
 		t.Errorf("got %v\n", err)
 	}
-	if user.info.Status != mark2.UserStatus_Logout {
-		t.Errorf("got %v\nwant %v", user.info.Status, mark2.UserStatus_Logout)
+	if user.info.Status != mark2.UserStatus_Matched {
+		t.Errorf("got %v\nwant %v", user.info.Status, mark2.UserStatus_Matched)
 	}
 
 	err = user.remove()
