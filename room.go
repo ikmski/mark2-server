@@ -16,41 +16,29 @@ func newRoom() *room {
 	return r
 }
 
-func newRoomWithRoomID(id uint32) *room {
-	r := newRoom()
-	r.info.Id = id
-	return r
-}
-
 func createRoom(groupID uint32, capacity uint32, userID uint32) (*room, error) {
 
 	if capacity == 0 {
 		return nil, fmt.Errorf("capacity must be greater than 0")
 	}
 
-	roomStorage := newRoomStorage()
+	newID := issueRoomID()
 
-	id, err := roomStorage.createNewRoomID()
-	if err != nil {
-		return nil, err
-	}
-
-	// ルーム作成
-	room := newRoomWithRoomID(id)
+	room := newRoom()
 	room.info.GroupId = groupID
+	room.info.Id = newID
 	room.info.Capacity = capacity
 	room.info.UserIdList = make([]uint32, 0, capacity)
 	room.info.UserIdList = append(room.info.UserIdList, userID)
 
-	// Status
-	room.info.Status = mark2.RoomStatus_OPEN
-	err = roomStorage.addRoomInfoListByStatus(room.info.GroupId, room.info.Status, room.info)
+	roomIDList := getRoomIDListInstance()
+	err := roomIDList.add(room.info.GroupId, room.info.Status, room.info.Id)
 	if err != nil {
 		return nil, err
 	}
 
-	// 保存
-	err = roomStorage.setRoomInfoByRoomID(id, room.info)
+	rooms := getRoomsInstance()
+	err = rooms.set(room.info.Id, room)
 	if err != nil {
 		return nil, err
 	}
@@ -60,18 +48,16 @@ func createRoom(groupID uint32, capacity uint32, userID uint32) (*room, error) {
 
 func (r *room) remove() error {
 
-	roomStorage := newRoomStorage()
-
-	err := roomStorage.removeRoomInfoByRoomID(r.info.Id)
+	roomIDList := getRoomIDListInstance()
+	err := roomIDList.remove(r.info.GroupId, r.info.Status, r.info.Id)
 	if err != nil {
 		return err
 	}
 
-	if r.info.Status != mark2.RoomStatus_CLOSED {
-		err = roomStorage.removeRoomInfoListByStatus(r.info.GroupId, r.info.Status, r.info)
-		if err != nil {
-			return err
-		}
+	rooms := getRoomsInstance()
+	err = rooms.del(r.info.Id)
+	if err != nil {
+		return err
 	}
 
 	return nil
@@ -88,14 +74,14 @@ func (r *room) canJoin() bool {
 
 func (r *room) join(userID uint32) error {
 
-	roomStorage := newRoomStorage()
+	if !r.canJoin() {
+		return fmt.Errorf("cannot join the room [%d]", r.info.Id)
+	}
 
-	// 一旦リストから抜ける
-	if r.info.Status != mark2.RoomStatus_CLOSED {
-		err := roomStorage.removeRoomInfoListByStatus(r.info.GroupId, r.info.Status, r.info)
-		if err != nil {
-			return err
-		}
+	roomIDList := getRoomIDListInstance()
+	err := roomIDList.remove(r.info.GroupId, r.info.Status, r.info.Id)
+	if err != nil {
+		return err
 	}
 
 	r.info.UserIdList = append(r.info.UserIdList, userID)
@@ -104,13 +90,8 @@ func (r *room) join(userID uint32) error {
 		r.info.Status = mark2.RoomStatus_CLOSED
 	} else {
 		r.info.Status = mark2.RoomStatus_OPEN
-		err := roomStorage.addRoomInfoListByStatus(r.info.GroupId, r.info.Status, r.info)
-		if err != nil {
-			return err
-		}
 	}
-
-	err := roomStorage.setRoomInfoByRoomID(r.info.Id, r.info)
+	err = roomIDList.add(r.info.GroupId, r.info.Status, r.info.Id)
 	if err != nil {
 		return err
 	}
@@ -120,14 +101,11 @@ func (r *room) join(userID uint32) error {
 
 func (r *room) exit(userID uint32) error {
 
-	roomStorage := newRoomStorage()
+	roomIDList := getRoomIDListInstance()
 
-	// 一旦リストから抜ける
-	if r.info.Status != mark2.RoomStatus_CLOSED {
-		err := roomStorage.removeRoomInfoListByStatus(r.info.GroupId, r.info.Status, r.info)
-		if err != nil {
-			return err
-		}
+	err := roomIDList.remove(r.info.GroupId, r.info.Status, r.info.Id)
+	if err != nil {
+		return err
 	}
 
 	newList := make([]uint32, 0, r.info.Capacity)
@@ -141,9 +119,17 @@ func (r *room) exit(userID uint32) error {
 	listSize := len(r.info.UserIdList)
 	if uint32(listSize) <= 0 {
 		r.info.Status = mark2.RoomStatus_CLOSED
+
+		rooms := getRoomsInstance()
+		err = rooms.del(r.info.Id)
+		if err != nil {
+			return err
+		}
+
 	} else {
 		r.info.Status = mark2.RoomStatus_OPEN
-		err := roomStorage.addRoomInfoListByStatus(r.info.GroupId, r.info.Status, r.info)
+
+		err := roomIDList.add(r.info.GroupId, r.info.Status, r.info.Id)
 		if err != nil {
 			return err
 		}

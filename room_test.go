@@ -118,8 +118,4 @@ func TestRoomExitRoom(t *testing.T) {
 		t.Errorf("got %v\nwant %v", canJoin, false)
 	}
 
-	err = room.remove()
-	if err != nil {
-		t.Errorf("got %v\n", err)
-	}
 }
