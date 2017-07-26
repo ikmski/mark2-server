@@ -8,7 +8,6 @@ func TestTokenValid(t *testing.T) {
 
 	var groupID uint32 = 1001
 	var userID uint32 = 2001
-	uniqueKey := "test_unique_key"
 	userName := "test_user_name"
 
 	subject := "test_subject"
@@ -16,7 +15,6 @@ func TestTokenValid(t *testing.T) {
 	claims01 := newTokenClaims()
 	claims01.GroupID = groupID
 	claims01.UserID = userID
-	claims01.UniqueKey = uniqueKey
 	claims01.UserName = userName
 	claims01.Subject = subject
 
@@ -39,7 +37,6 @@ func TestTokenDecode(t *testing.T) {
 
 	var groupID uint32 = 1001
 	var userID uint32 = 2001
-	uniqueKey := "test_unique_key"
 	userName := "test_user_name"
 
 	subject := "test_subject"
@@ -47,7 +44,6 @@ func TestTokenDecode(t *testing.T) {
 	claims01 := newTokenClaims()
 	claims01.GroupID = groupID
 	claims01.UserID = userID
-	claims01.UniqueKey = uniqueKey
 	claims01.UserName = userName
 	claims01.Subject = subject
 
@@ -66,9 +62,6 @@ func TestTokenDecode(t *testing.T) {
 	}
 	if claims02.UserID != userID {
 		t.Errorf("got %v\nwant %v", claims02.UserID, userID)
-	}
-	if claims02.UniqueKey != uniqueKey {
-		t.Errorf("got %v\nwant %v", claims02.UniqueKey, uniqueKey)
 	}
 	if claims02.UserName != userName {
 		t.Errorf("got %v\nwant %v", claims02.UserName, userName)
