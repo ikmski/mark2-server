@@ -14,8 +14,8 @@ func TestWaitStreamsSet(t *testing.T) {
 	var id1 uint32 = 10001
 	var id2 uint32 = 10002
 
-	stream1 := new(mark2.MessageService_WaitMessageServer)
-	stream2 := new(mark2.MessageService_WaitMessageServer)
+	var stream1 mark2.MessageService_WaitMessageServer
+	var stream2 mark2.MessageService_WaitMessageServer
 
 	has := ws.has(id1)
 	if has {
@@ -56,8 +56,8 @@ func TestWaitStreamsGet(t *testing.T) {
 	var id1 uint32 = 10001
 	var id2 uint32 = 10002
 
-	stream1 := new(mark2.MessageService_WaitMessageServer)
-	stream2 := new(mark2.MessageService_WaitMessageServer)
+	var stream1 mark2.MessageService_WaitMessageServer
+	var stream2 mark2.MessageService_WaitMessageServer
 
 	err := ws.set(id1, stream1)
 	if err != nil {
@@ -96,8 +96,8 @@ func TestWaitStreamsDel(t *testing.T) {
 	var id1 uint32 = 10001
 	var id2 uint32 = 10002
 
-	stream1 := new(mark2.MessageService_WaitMessageServer)
-	stream2 := new(mark2.MessageService_WaitMessageServer)
+	var stream1 mark2.MessageService_WaitMessageServer
+	var stream2 mark2.MessageService_WaitMessageServer
 
 	err := ws.set(id1, stream1)
 	if err != nil {

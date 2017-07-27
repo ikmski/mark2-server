@@ -125,7 +125,7 @@ func (s *messageServer) WaitMessage(token *mark2.AccessToken, srv mark2.MessageS
 	}
 
 	waitStreams := getWaitStreamsInstance()
-	waitStreams.set(claims.UserID, &srv)
+	waitStreams.set(claims.UserID, srv)
 
 	for {
 
