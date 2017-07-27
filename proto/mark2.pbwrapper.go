@@ -26,6 +26,11 @@ func NewRoomInfoList() *RoomInfoList {
 	return ril
 }
 
+func NewMessage() *Message {
+	m := new(Message)
+	return m
+}
+
 // ===== Request =====
 
 // ===== Response =====

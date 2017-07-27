@@ -114,6 +114,100 @@ func (s *messageServer) SendMessage(ctx context.Context, req *mark2.MessageReque
 
 func (s *messageServer) SendStream(srv mark2.MessageService_SendStreamServer) error {
 
+	type receivedMessage struct {
+		userID  uint32
+		roomID  uint32
+		content string
+	}
+
+	result := mark2.NewResult()
+
+	ctx := srv.Context()
+	errChan := make(chan error, 1)
+	messageChan := make(chan receivedMessage, 1)
+
+	// Receive Message
+	go func() {
+		for {
+			messageReq, err := srv.Recv()
+			if err != nil {
+				errChan <- err
+				break
+			}
+
+			claims, err := tokenDecode(messageReq.GetToken().Token)
+			if err != nil {
+				errChan <- err
+				break
+			}
+
+			user, err := getUsersInstance().get(claims.UserID)
+			if err != nil {
+				errChan <- err
+				break
+			}
+
+			rm := receivedMessage{
+				user.info.Id,
+				user.roomID,
+				messageReq.Content,
+			}
+
+			messageChan <- rm
+		}
+	}()
+
+	// Send Message
+	go func() {
+		for {
+			rm := <-messageChan
+
+			message := mark2.NewMessage()
+			message.FromUserId = rm.userID
+			message.Content = rm.content
+
+			room, err := getRoomsInstance().get(rm.roomID)
+			for _, uid := range room.info.UserIdList {
+				stream, err := getWaitStreamsInstance().get(uid)
+				if err != nil {
+					errChan <- err
+					break
+				}
+				err = stream.Send(message)
+				if err != nil {
+					errChan <- err
+					break
+				}
+			}
+
+			result.Code = mark2.ResultCodes_OK
+			err = srv.Send(result)
+			if err != nil {
+				errChan <- err
+				break
+			}
+		}
+	}()
+
+	// Check Context
+	go func() {
+		for {
+			select {
+			case <-ctx.Done():
+				err := ctx.Err()
+				fmt.Printf("Connection broken: %v\n", err)
+				errChan <- err
+				break
+			}
+		}
+	}()
+
+	select {
+	case err := <-errChan:
+		fmt.Printf("%v\n", err)
+		return err
+	}
+
 	return nil
 }
 
