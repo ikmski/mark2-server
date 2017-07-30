@@ -151,7 +151,6 @@ service MessageService {
     rpc MatchRandom (MatchRequest) returns (RoomInfoResult);     // ランダムマッチング
     rpc ExitRoom (AccessToken) returns (Result);                 // ルームを退出する
 
-    rpc SendMessage (MessageRequest) returns (Result);       // メッセージ送信
     rpc SendStream (stream MessageRequest) returns (stream Result);       // ストリーム送信
 
     rpc WaitMessage (AccessToken) returns (stream Message); // メッセージ受信待ち

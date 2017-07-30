@@ -107,11 +107,6 @@ func (s *messageServer) ExitRoom(ctx context.Context, token *mark2.AccessToken) 
 	return new(mark2.Result), nil
 }
 
-func (s *messageServer) SendMessage(ctx context.Context, req *mark2.MessageRequest) (*mark2.Result, error) {
-
-	return new(mark2.Result), nil
-}
-
 func (s *messageServer) SendStream(srv mark2.MessageService_SendStreamServer) error {
 
 	type receivedMessage struct {
