@@ -163,6 +163,7 @@ func (s *messageServer) SendStream(srv mark2.MessageService_SendStreamServer) er
 			rm := <-messageChan
 
 			message := mark2.NewMessage()
+			message.Id = issueMessageID()
 			message.UserId = rm.userID
 			message.Content = rm.content
 
