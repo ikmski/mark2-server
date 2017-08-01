@@ -11,19 +11,9 @@ func NewUserInfo() *UserInfo {
 	return ui
 }
 
-func NewUserInfoList() *UserInfoList {
-	uil := new(UserInfoList)
-	return uil
-}
-
 func NewRoomInfo() *RoomInfo {
 	ri := new(RoomInfo)
 	return ri
-}
-
-func NewRoomInfoList() *RoomInfoList {
-	ril := new(RoomInfoList)
-	return ril
 }
 
 func NewMessage() *Message {

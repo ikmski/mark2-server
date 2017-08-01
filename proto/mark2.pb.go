@@ -10,20 +10,15 @@ It is generated from these files:
 It has these top-level messages:
 	AccessToken
 	UserInfo
-	UserInfoList
 	RoomInfo
-	RoomInfoList
 	Message
-	MessageList
 	LoginRequest
-	CreateRoomRequest
-	JoinRoomRequest
+	UserInfoRequest
+	RoomInfoRequest
 	MatchRequest
 	MessageRequest
 	Result
 	LoginResult
-	UserInfoListResult
-	RoomInfoListResult
 	UserInfoResult
 	RoomInfoResult
 */
@@ -168,23 +163,6 @@ func (m *UserInfo) GetStatus() UserStatus {
 	return UserStatus_Login
 }
 
-// ユーザ情報リスト
-type UserInfoList struct {
-	List []*UserInfo `protobuf:"bytes,1,rep,name=list" json:"list,omitempty"`
-}
-
-func (m *UserInfoList) Reset()                    { *m = UserInfoList{} }
-func (m *UserInfoList) String() string            { return proto.CompactTextString(m) }
-func (*UserInfoList) ProtoMessage()               {}
-func (*UserInfoList) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{2} }
-
-func (m *UserInfoList) GetList() []*UserInfo {
-	if m != nil {
-		return m.List
-	}
-	return nil
-}
-
 // ルーム情報
 type RoomInfo struct {
 	GroupId    uint32     `protobuf:"varint,1,opt,name=group_id,json=groupId" json:"group_id,omitempty"`
@@ -197,7 +175,7 @@ type RoomInfo struct {
 func (m *RoomInfo) Reset()                    { *m = RoomInfo{} }
 func (m *RoomInfo) String() string            { return proto.CompactTextString(m) }
 func (*RoomInfo) ProtoMessage()               {}
-func (*RoomInfo) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{3} }
+func (*RoomInfo) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{2} }
 
 func (m *RoomInfo) GetGroupId() uint32 {
 	if m != nil {
@@ -234,23 +212,6 @@ func (m *RoomInfo) GetUserIdList() []uint32 {
 	return nil
 }
 
-// ルーム情報リスト
-type RoomInfoList struct {
-	List []*RoomInfo `protobuf:"bytes,1,rep,name=list" json:"list,omitempty"`
-}
-
-func (m *RoomInfoList) Reset()                    { *m = RoomInfoList{} }
-func (m *RoomInfoList) String() string            { return proto.CompactTextString(m) }
-func (*RoomInfoList) ProtoMessage()               {}
-func (*RoomInfoList) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{4} }
-
-func (m *RoomInfoList) GetList() []*RoomInfo {
-	if m != nil {
-		return m.List
-	}
-	return nil
-}
-
 // メッセージ
 type Message struct {
 	Id      uint32 `protobuf:"varint,1,opt,name=id" json:"id,omitempty"`
@@ -261,7 +222,7 @@ type Message struct {
 func (m *Message) Reset()                    { *m = Message{} }
 func (m *Message) String() string            { return proto.CompactTextString(m) }
 func (*Message) ProtoMessage()               {}
-func (*Message) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{5} }
+func (*Message) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{3} }
 
 func (m *Message) GetId() uint32 {
 	if m != nil {
@@ -284,23 +245,6 @@ func (m *Message) GetContent() string {
 	return ""
 }
 
-// メッセージリスト
-type MessageList struct {
-	List []*Message `protobuf:"bytes,1,rep,name=list" json:"list,omitempty"`
-}
-
-func (m *MessageList) Reset()                    { *m = MessageList{} }
-func (m *MessageList) String() string            { return proto.CompactTextString(m) }
-func (*MessageList) ProtoMessage()               {}
-func (*MessageList) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{6} }
-
-func (m *MessageList) GetList() []*Message {
-	if m != nil {
-		return m.List
-	}
-	return nil
-}
-
 // ログインリクエスト
 type LoginRequest struct {
 	GroupId uint32 `protobuf:"varint,1,opt,name=group_id,json=groupId" json:"group_id,omitempty"`
@@ -309,7 +253,7 @@ type LoginRequest struct {
 func (m *LoginRequest) Reset()                    { *m = LoginRequest{} }
 func (m *LoginRequest) String() string            { return proto.CompactTextString(m) }
 func (*LoginRequest) ProtoMessage()               {}
-func (*LoginRequest) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{7} }
+func (*LoginRequest) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{4} }
 
 func (m *LoginRequest) GetGroupId() uint32 {
 	if m != nil {
@@ -318,54 +262,54 @@ func (m *LoginRequest) GetGroupId() uint32 {
 	return 0
 }
 
-// ルーム作成リクエスト
-type CreateRoomRequest struct {
-	Token    *AccessToken `protobuf:"bytes,1,opt,name=token" json:"token,omitempty"`
-	Capacity uint32       `protobuf:"varint,2,opt,name=capacity" json:"capacity,omitempty"`
+// ユーザ情報リクエスト
+type UserInfoRequest struct {
+	Token      *AccessToken `protobuf:"bytes,1,opt,name=token" json:"token,omitempty"`
+	UserIdList []uint32     `protobuf:"varint,2,rep,packed,name=user_id_list,json=userIdList" json:"user_id_list,omitempty"`
 }
 
-func (m *CreateRoomRequest) Reset()                    { *m = CreateRoomRequest{} }
-func (m *CreateRoomRequest) String() string            { return proto.CompactTextString(m) }
-func (*CreateRoomRequest) ProtoMessage()               {}
-func (*CreateRoomRequest) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{8} }
+func (m *UserInfoRequest) Reset()                    { *m = UserInfoRequest{} }
+func (m *UserInfoRequest) String() string            { return proto.CompactTextString(m) }
+func (*UserInfoRequest) ProtoMessage()               {}
+func (*UserInfoRequest) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{5} }
 
-func (m *CreateRoomRequest) GetToken() *AccessToken {
+func (m *UserInfoRequest) GetToken() *AccessToken {
 	if m != nil {
 		return m.Token
 	}
 	return nil
 }
 
-func (m *CreateRoomRequest) GetCapacity() uint32 {
+func (m *UserInfoRequest) GetUserIdList() []uint32 {
 	if m != nil {
-		return m.Capacity
+		return m.UserIdList
 	}
-	return 0
+	return nil
 }
 
-// ルーム参加リクエスト
-type JoinRoomRequest struct {
-	Token  *AccessToken `protobuf:"bytes,1,opt,name=token" json:"token,omitempty"`
-	RoomId uint32       `protobuf:"varint,2,opt,name=room_id,json=roomId" json:"room_id,omitempty"`
+// ルーム情報リクエスト
+type RoomInfoRequest struct {
+	Token      *AccessToken `protobuf:"bytes,1,opt,name=token" json:"token,omitempty"`
+	RoomIdList []uint32     `protobuf:"varint,2,rep,packed,name=room_id_list,json=roomIdList" json:"room_id_list,omitempty"`
 }
 
-func (m *JoinRoomRequest) Reset()                    { *m = JoinRoomRequest{} }
-func (m *JoinRoomRequest) String() string            { return proto.CompactTextString(m) }
-func (*JoinRoomRequest) ProtoMessage()               {}
-func (*JoinRoomRequest) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{9} }
+func (m *RoomInfoRequest) Reset()                    { *m = RoomInfoRequest{} }
+func (m *RoomInfoRequest) String() string            { return proto.CompactTextString(m) }
+func (*RoomInfoRequest) ProtoMessage()               {}
+func (*RoomInfoRequest) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{6} }
 
-func (m *JoinRoomRequest) GetToken() *AccessToken {
+func (m *RoomInfoRequest) GetToken() *AccessToken {
 	if m != nil {
 		return m.Token
 	}
 	return nil
 }
 
-func (m *JoinRoomRequest) GetRoomId() uint32 {
+func (m *RoomInfoRequest) GetRoomIdList() []uint32 {
 	if m != nil {
-		return m.RoomId
+		return m.RoomIdList
 	}
-	return 0
+	return nil
 }
 
 // マッチリクエスト
@@ -377,7 +321,7 @@ type MatchRequest struct {
 func (m *MatchRequest) Reset()                    { *m = MatchRequest{} }
 func (m *MatchRequest) String() string            { return proto.CompactTextString(m) }
 func (*MatchRequest) ProtoMessage()               {}
-func (*MatchRequest) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{10} }
+func (*MatchRequest) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{7} }
 
 func (m *MatchRequest) GetToken() *AccessToken {
 	if m != nil {
@@ -402,7 +346,7 @@ type MessageRequest struct {
 func (m *MessageRequest) Reset()                    { *m = MessageRequest{} }
 func (m *MessageRequest) String() string            { return proto.CompactTextString(m) }
 func (*MessageRequest) ProtoMessage()               {}
-func (*MessageRequest) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{11} }
+func (*MessageRequest) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{8} }
 
 func (m *MessageRequest) GetToken() *AccessToken {
 	if m != nil {
@@ -427,7 +371,7 @@ type Result struct {
 func (m *Result) Reset()                    { *m = Result{} }
 func (m *Result) String() string            { return proto.CompactTextString(m) }
 func (*Result) ProtoMessage()               {}
-func (*Result) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{12} }
+func (*Result) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{9} }
 
 func (m *Result) GetCode() ResultCodes {
 	if m != nil {
@@ -452,7 +396,7 @@ type LoginResult struct {
 func (m *LoginResult) Reset()                    { *m = LoginResult{} }
 func (m *LoginResult) String() string            { return proto.CompactTextString(m) }
 func (*LoginResult) ProtoMessage()               {}
-func (*LoginResult) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{13} }
+func (*LoginResult) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{10} }
 
 func (m *LoginResult) GetResult() *Result {
 	if m != nil {
@@ -468,66 +412,16 @@ func (m *LoginResult) GetAccessToken() *AccessToken {
 	return nil
 }
 
-// ユーザ情報リスト結果
-type UserInfoListResult struct {
-	Result       *Result       `protobuf:"bytes,1,opt,name=result" json:"result,omitempty"`
-	UserInfoList *UserInfoList `protobuf:"bytes,2,opt,name=user_info_list,json=userInfoList" json:"user_info_list,omitempty"`
-}
-
-func (m *UserInfoListResult) Reset()                    { *m = UserInfoListResult{} }
-func (m *UserInfoListResult) String() string            { return proto.CompactTextString(m) }
-func (*UserInfoListResult) ProtoMessage()               {}
-func (*UserInfoListResult) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{14} }
-
-func (m *UserInfoListResult) GetResult() *Result {
-	if m != nil {
-		return m.Result
-	}
-	return nil
-}
-
-func (m *UserInfoListResult) GetUserInfoList() *UserInfoList {
-	if m != nil {
-		return m.UserInfoList
-	}
-	return nil
-}
-
-// ルーム情報リスト結果
-type RoomInfoListResult struct {
-	Result       *Result       `protobuf:"bytes,1,opt,name=result" json:"result,omitempty"`
-	RoomInfoList *RoomInfoList `protobuf:"bytes,2,opt,name=room_info_list,json=roomInfoList" json:"room_info_list,omitempty"`
-}
-
-func (m *RoomInfoListResult) Reset()                    { *m = RoomInfoListResult{} }
-func (m *RoomInfoListResult) String() string            { return proto.CompactTextString(m) }
-func (*RoomInfoListResult) ProtoMessage()               {}
-func (*RoomInfoListResult) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{15} }
-
-func (m *RoomInfoListResult) GetResult() *Result {
-	if m != nil {
-		return m.Result
-	}
-	return nil
-}
-
-func (m *RoomInfoListResult) GetRoomInfoList() *RoomInfoList {
-	if m != nil {
-		return m.RoomInfoList
-	}
-	return nil
-}
-
 // ユーザ情報結果
 type UserInfoResult struct {
-	Result   *Result   `protobuf:"bytes,1,opt,name=result" json:"result,omitempty"`
-	UserInfo *UserInfo `protobuf:"bytes,2,opt,name=user_info,json=userInfo" json:"user_info,omitempty"`
+	Result       *Result     `protobuf:"bytes,1,opt,name=result" json:"result,omitempty"`
+	UserInfoList []*UserInfo `protobuf:"bytes,2,rep,name=user_info_list,json=userInfoList" json:"user_info_list,omitempty"`
 }
 
 func (m *UserInfoResult) Reset()                    { *m = UserInfoResult{} }
 func (m *UserInfoResult) String() string            { return proto.CompactTextString(m) }
 func (*UserInfoResult) ProtoMessage()               {}
-func (*UserInfoResult) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{16} }
+func (*UserInfoResult) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{11} }
 
 func (m *UserInfoResult) GetResult() *Result {
 	if m != nil {
@@ -536,23 +430,23 @@ func (m *UserInfoResult) GetResult() *Result {
 	return nil
 }
 
-func (m *UserInfoResult) GetUserInfo() *UserInfo {
+func (m *UserInfoResult) GetUserInfoList() []*UserInfo {
 	if m != nil {
-		return m.UserInfo
+		return m.UserInfoList
 	}
 	return nil
 }
 
 // ルーム情報結果
 type RoomInfoResult struct {
-	Result   *Result   `protobuf:"bytes,1,opt,name=result" json:"result,omitempty"`
-	RoomInfo *RoomInfo `protobuf:"bytes,2,opt,name=room_info,json=roomInfo" json:"room_info,omitempty"`
+	Result       *Result     `protobuf:"bytes,1,opt,name=result" json:"result,omitempty"`
+	RoomInfoList []*RoomInfo `protobuf:"bytes,2,rep,name=room_info_list,json=roomInfoList" json:"room_info_list,omitempty"`
 }
 
 func (m *RoomInfoResult) Reset()                    { *m = RoomInfoResult{} }
 func (m *RoomInfoResult) String() string            { return proto.CompactTextString(m) }
 func (*RoomInfoResult) ProtoMessage()               {}
-func (*RoomInfoResult) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{17} }
+func (*RoomInfoResult) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{12} }
 
 func (m *RoomInfoResult) GetResult() *Result {
 	if m != nil {
@@ -561,9 +455,9 @@ func (m *RoomInfoResult) GetResult() *Result {
 	return nil
 }
 
-func (m *RoomInfoResult) GetRoomInfo() *RoomInfo {
+func (m *RoomInfoResult) GetRoomInfoList() []*RoomInfo {
 	if m != nil {
-		return m.RoomInfo
+		return m.RoomInfoList
 	}
 	return nil
 }
@@ -571,20 +465,15 @@ func (m *RoomInfoResult) GetRoomInfo() *RoomInfo {
 func init() {
 	proto.RegisterType((*AccessToken)(nil), "mark2.AccessToken")
 	proto.RegisterType((*UserInfo)(nil), "mark2.UserInfo")
-	proto.RegisterType((*UserInfoList)(nil), "mark2.UserInfoList")
 	proto.RegisterType((*RoomInfo)(nil), "mark2.RoomInfo")
-	proto.RegisterType((*RoomInfoList)(nil), "mark2.RoomInfoList")
 	proto.RegisterType((*Message)(nil), "mark2.Message")
-	proto.RegisterType((*MessageList)(nil), "mark2.MessageList")
 	proto.RegisterType((*LoginRequest)(nil), "mark2.LoginRequest")
-	proto.RegisterType((*CreateRoomRequest)(nil), "mark2.CreateRoomRequest")
-	proto.RegisterType((*JoinRoomRequest)(nil), "mark2.JoinRoomRequest")
+	proto.RegisterType((*UserInfoRequest)(nil), "mark2.UserInfoRequest")
+	proto.RegisterType((*RoomInfoRequest)(nil), "mark2.RoomInfoRequest")
 	proto.RegisterType((*MatchRequest)(nil), "mark2.MatchRequest")
 	proto.RegisterType((*MessageRequest)(nil), "mark2.MessageRequest")
 	proto.RegisterType((*Result)(nil), "mark2.Result")
 	proto.RegisterType((*LoginResult)(nil), "mark2.LoginResult")
-	proto.RegisterType((*UserInfoListResult)(nil), "mark2.UserInfoListResult")
-	proto.RegisterType((*RoomInfoListResult)(nil), "mark2.RoomInfoListResult")
 	proto.RegisterType((*UserInfoResult)(nil), "mark2.UserInfoResult")
 	proto.RegisterType((*RoomInfoResult)(nil), "mark2.RoomInfoResult")
 	proto.RegisterEnum("mark2.ResultCodes", ResultCodes_name, ResultCodes_value)
@@ -605,14 +494,9 @@ const _ = grpc.SupportPackageIsVersion4
 type MessageServiceClient interface {
 	Login(ctx context.Context, in *LoginRequest, opts ...grpc.CallOption) (*LoginResult, error)
 	Logout(ctx context.Context, in *AccessToken, opts ...grpc.CallOption) (*Result, error)
-	GetUserInfoList(ctx context.Context, in *AccessToken, opts ...grpc.CallOption) (*UserInfoListResult, error)
-	GetRoomInfoList(ctx context.Context, in *AccessToken, opts ...grpc.CallOption) (*RoomInfoListResult, error)
-	GetOwnUserInfo(ctx context.Context, in *AccessToken, opts ...grpc.CallOption) (*UserInfoResult, error)
-	GetOwnRoomInfo(ctx context.Context, in *AccessToken, opts ...grpc.CallOption) (*RoomInfoResult, error)
-	CreateRoom(ctx context.Context, in *CreateRoomRequest, opts ...grpc.CallOption) (*RoomInfoResult, error)
-	JoinRoom(ctx context.Context, in *JoinRoomRequest, opts ...grpc.CallOption) (*RoomInfoResult, error)
+	GetUserInfo(ctx context.Context, in *UserInfoRequest, opts ...grpc.CallOption) (*UserInfoResult, error)
+	GetRoomInfo(ctx context.Context, in *RoomInfoRequest, opts ...grpc.CallOption) (*RoomInfoResult, error)
 	MatchRandom(ctx context.Context, in *MatchRequest, opts ...grpc.CallOption) (*RoomInfoResult, error)
-	ExitRoom(ctx context.Context, in *AccessToken, opts ...grpc.CallOption) (*Result, error)
 	SendStream(ctx context.Context, opts ...grpc.CallOption) (MessageService_SendStreamClient, error)
 	WaitMessage(ctx context.Context, in *AccessToken, opts ...grpc.CallOption) (MessageService_WaitMessageClient, error)
 }
@@ -643,54 +527,18 @@ func (c *messageServiceClient) Logout(ctx context.Context, in *AccessToken, opts
 	return out, nil
 }
 
-func (c *messageServiceClient) GetUserInfoList(ctx context.Context, in *AccessToken, opts ...grpc.CallOption) (*UserInfoListResult, error) {
-	out := new(UserInfoListResult)
-	err := grpc.Invoke(ctx, "/mark2.MessageService/GetUserInfoList", in, out, c.cc, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *messageServiceClient) GetRoomInfoList(ctx context.Context, in *AccessToken, opts ...grpc.CallOption) (*RoomInfoListResult, error) {
-	out := new(RoomInfoListResult)
-	err := grpc.Invoke(ctx, "/mark2.MessageService/GetRoomInfoList", in, out, c.cc, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *messageServiceClient) GetOwnUserInfo(ctx context.Context, in *AccessToken, opts ...grpc.CallOption) (*UserInfoResult, error) {
+func (c *messageServiceClient) GetUserInfo(ctx context.Context, in *UserInfoRequest, opts ...grpc.CallOption) (*UserInfoResult, error) {
 	out := new(UserInfoResult)
-	err := grpc.Invoke(ctx, "/mark2.MessageService/GetOwnUserInfo", in, out, c.cc, opts...)
+	err := grpc.Invoke(ctx, "/mark2.MessageService/GetUserInfo", in, out, c.cc, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *messageServiceClient) GetOwnRoomInfo(ctx context.Context, in *AccessToken, opts ...grpc.CallOption) (*RoomInfoResult, error) {
+func (c *messageServiceClient) GetRoomInfo(ctx context.Context, in *RoomInfoRequest, opts ...grpc.CallOption) (*RoomInfoResult, error) {
 	out := new(RoomInfoResult)
-	err := grpc.Invoke(ctx, "/mark2.MessageService/GetOwnRoomInfo", in, out, c.cc, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *messageServiceClient) CreateRoom(ctx context.Context, in *CreateRoomRequest, opts ...grpc.CallOption) (*RoomInfoResult, error) {
-	out := new(RoomInfoResult)
-	err := grpc.Invoke(ctx, "/mark2.MessageService/CreateRoom", in, out, c.cc, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *messageServiceClient) JoinRoom(ctx context.Context, in *JoinRoomRequest, opts ...grpc.CallOption) (*RoomInfoResult, error) {
-	out := new(RoomInfoResult)
-	err := grpc.Invoke(ctx, "/mark2.MessageService/JoinRoom", in, out, c.cc, opts...)
+	err := grpc.Invoke(ctx, "/mark2.MessageService/GetRoomInfo", in, out, c.cc, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -700,15 +548,6 @@ func (c *messageServiceClient) JoinRoom(ctx context.Context, in *JoinRoomRequest
 func (c *messageServiceClient) MatchRandom(ctx context.Context, in *MatchRequest, opts ...grpc.CallOption) (*RoomInfoResult, error) {
 	out := new(RoomInfoResult)
 	err := grpc.Invoke(ctx, "/mark2.MessageService/MatchRandom", in, out, c.cc, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *messageServiceClient) ExitRoom(ctx context.Context, in *AccessToken, opts ...grpc.CallOption) (*Result, error) {
-	out := new(Result)
-	err := grpc.Invoke(ctx, "/mark2.MessageService/ExitRoom", in, out, c.cc, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -783,14 +622,9 @@ func (x *messageServiceWaitMessageClient) Recv() (*Message, error) {
 type MessageServiceServer interface {
 	Login(context.Context, *LoginRequest) (*LoginResult, error)
 	Logout(context.Context, *AccessToken) (*Result, error)
-	GetUserInfoList(context.Context, *AccessToken) (*UserInfoListResult, error)
-	GetRoomInfoList(context.Context, *AccessToken) (*RoomInfoListResult, error)
-	GetOwnUserInfo(context.Context, *AccessToken) (*UserInfoResult, error)
-	GetOwnRoomInfo(context.Context, *AccessToken) (*RoomInfoResult, error)
-	CreateRoom(context.Context, *CreateRoomRequest) (*RoomInfoResult, error)
-	JoinRoom(context.Context, *JoinRoomRequest) (*RoomInfoResult, error)
+	GetUserInfo(context.Context, *UserInfoRequest) (*UserInfoResult, error)
+	GetRoomInfo(context.Context, *RoomInfoRequest) (*RoomInfoResult, error)
 	MatchRandom(context.Context, *MatchRequest) (*RoomInfoResult, error)
-	ExitRoom(context.Context, *AccessToken) (*Result, error)
 	SendStream(MessageService_SendStreamServer) error
 	WaitMessage(*AccessToken, MessageService_WaitMessageServer) error
 }
@@ -835,110 +669,38 @@ func _MessageService_Logout_Handler(srv interface{}, ctx context.Context, dec fu
 	return interceptor(ctx, in, info, handler)
 }
 
-func _MessageService_GetUserInfoList_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(AccessToken)
+func _MessageService_GetUserInfo_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UserInfoRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(MessageServiceServer).GetUserInfoList(ctx, in)
+		return srv.(MessageServiceServer).GetUserInfo(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/mark2.MessageService/GetUserInfoList",
+		FullMethod: "/mark2.MessageService/GetUserInfo",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(MessageServiceServer).GetUserInfoList(ctx, req.(*AccessToken))
+		return srv.(MessageServiceServer).GetUserInfo(ctx, req.(*UserInfoRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _MessageService_GetRoomInfoList_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(AccessToken)
+func _MessageService_GetRoomInfo_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(RoomInfoRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(MessageServiceServer).GetRoomInfoList(ctx, in)
+		return srv.(MessageServiceServer).GetRoomInfo(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/mark2.MessageService/GetRoomInfoList",
+		FullMethod: "/mark2.MessageService/GetRoomInfo",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(MessageServiceServer).GetRoomInfoList(ctx, req.(*AccessToken))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _MessageService_GetOwnUserInfo_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(AccessToken)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(MessageServiceServer).GetOwnUserInfo(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/mark2.MessageService/GetOwnUserInfo",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(MessageServiceServer).GetOwnUserInfo(ctx, req.(*AccessToken))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _MessageService_GetOwnRoomInfo_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(AccessToken)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(MessageServiceServer).GetOwnRoomInfo(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/mark2.MessageService/GetOwnRoomInfo",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(MessageServiceServer).GetOwnRoomInfo(ctx, req.(*AccessToken))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _MessageService_CreateRoom_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(CreateRoomRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(MessageServiceServer).CreateRoom(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/mark2.MessageService/CreateRoom",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(MessageServiceServer).CreateRoom(ctx, req.(*CreateRoomRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _MessageService_JoinRoom_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(JoinRoomRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(MessageServiceServer).JoinRoom(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/mark2.MessageService/JoinRoom",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(MessageServiceServer).JoinRoom(ctx, req.(*JoinRoomRequest))
+		return srv.(MessageServiceServer).GetRoomInfo(ctx, req.(*RoomInfoRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -957,24 +719,6 @@ func _MessageService_MatchRandom_Handler(srv interface{}, ctx context.Context, d
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(MessageServiceServer).MatchRandom(ctx, req.(*MatchRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _MessageService_ExitRoom_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(AccessToken)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(MessageServiceServer).ExitRoom(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/mark2.MessageService/ExitRoom",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(MessageServiceServer).ExitRoom(ctx, req.(*AccessToken))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -1039,36 +783,16 @@ var _MessageService_serviceDesc = grpc.ServiceDesc{
 			Handler:    _MessageService_Logout_Handler,
 		},
 		{
-			MethodName: "GetUserInfoList",
-			Handler:    _MessageService_GetUserInfoList_Handler,
+			MethodName: "GetUserInfo",
+			Handler:    _MessageService_GetUserInfo_Handler,
 		},
 		{
-			MethodName: "GetRoomInfoList",
-			Handler:    _MessageService_GetRoomInfoList_Handler,
-		},
-		{
-			MethodName: "GetOwnUserInfo",
-			Handler:    _MessageService_GetOwnUserInfo_Handler,
-		},
-		{
-			MethodName: "GetOwnRoomInfo",
-			Handler:    _MessageService_GetOwnRoomInfo_Handler,
-		},
-		{
-			MethodName: "CreateRoom",
-			Handler:    _MessageService_CreateRoom_Handler,
-		},
-		{
-			MethodName: "JoinRoom",
-			Handler:    _MessageService_JoinRoom_Handler,
+			MethodName: "GetRoomInfo",
+			Handler:    _MessageService_GetRoomInfo_Handler,
 		},
 		{
 			MethodName: "MatchRandom",
 			Handler:    _MessageService_MatchRandom_Handler,
-		},
-		{
-			MethodName: "ExitRoom",
-			Handler:    _MessageService_ExitRoom_Handler,
 		},
 	},
 	Streams: []grpc.StreamDesc{
@@ -1090,56 +814,47 @@ var _MessageService_serviceDesc = grpc.ServiceDesc{
 func init() { proto.RegisterFile("mark2.proto", fileDescriptor0) }
 
 var fileDescriptor0 = []byte{
-	// 807 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x9c, 0x56, 0xe1, 0x6e, 0xd3, 0x30,
-	0x10, 0x5e, 0xd2, 0x36, 0x4d, 0x2f, 0x6d, 0x96, 0x19, 0xc6, 0xba, 0x49, 0x48, 0x55, 0x26, 0x50,
-	0x37, 0x60, 0x1a, 0xad, 0x40, 0x9a, 0x10, 0x12, 0x68, 0x4c, 0x53, 0x47, 0xb7, 0xa2, 0x74, 0x08,
-	0xf1, 0xab, 0x84, 0xc4, 0x2b, 0x51, 0xd7, 0x78, 0x24, 0xee, 0x80, 0x97, 0xe1, 0x51, 0x78, 0x36,
-	0x64, 0xc7, 0x49, 0x93, 0xac, 0xad, 0x08, 0xbf, 0xea, 0x8b, 0xef, 0xbe, 0xef, 0x3b, 0xdf, 0xf9,
-	0x5c, 0xd0, 0xa6, 0x76, 0x30, 0xe9, 0x1c, 0xdc, 0x04, 0x84, 0x12, 0x54, 0xe1, 0x86, 0xb9, 0x0b,
-	0xda, 0x5b, 0xc7, 0xc1, 0x61, 0x78, 0x49, 0x26, 0xd8, 0x47, 0xf7, 0xa1, 0x42, 0xd9, 0xa2, 0x29,
-	0xb5, 0xa4, 0x76, 0xcd, 0x8a, 0x0c, 0xf3, 0x0b, 0xa8, 0x1f, 0x43, 0x1c, 0xf4, 0xfc, 0x2b, 0x82,
-	0xb6, 0x41, 0x1d, 0x07, 0x64, 0x76, 0x33, 0xf2, 0x5c, 0xee, 0xd4, 0xb0, 0xaa, 0xdc, 0xee, 0xb9,
-	0x48, 0x07, 0xd9, 0x73, 0x9b, 0x32, 0xff, 0x28, 0x7b, 0x2e, 0xda, 0x03, 0x25, 0xa4, 0x36, 0x9d,
-	0x85, 0xcd, 0x52, 0x4b, 0x6a, 0xeb, 0x9d, 0x8d, 0x83, 0x48, 0x00, 0xc3, 0x1a, 0xf2, 0x0d, 0x4b,
-	0x38, 0x98, 0x5d, 0xa8, 0xc7, 0x0c, 0x7d, 0x2f, 0xa4, 0x68, 0x17, 0xca, 0xd7, 0x5e, 0x48, 0x9b,
-	0x52, 0xab, 0xd4, 0xd6, 0x3a, 0xeb, 0xa9, 0x40, 0xe6, 0x62, 0xf1, 0x4d, 0xf3, 0xb7, 0x04, 0xaa,
-	0x45, 0xc8, 0xb4, 0xa8, 0xae, 0x1d, 0x50, 0x1d, 0xfb, 0xc6, 0x76, 0x3c, 0xfa, 0x8b, 0x2b, 0x6b,
-	0x58, 0x89, 0x9d, 0xd2, 0x5c, 0xce, 0x68, 0x66, 0x3c, 0x59, 0xcd, 0xa8, 0x05, 0xf5, 0x59, 0x88,
-	0x83, 0x91, 0xe7, 0x8e, 0xb8, 0xd6, 0x4a, 0xab, 0xd4, 0x6e, 0x58, 0xc0, 0xbe, 0xf5, 0x5c, 0x96,
-	0x05, 0xcb, 0x2a, 0xd6, 0xb7, 0x22, 0xab, 0xd8, 0x45, 0x64, 0xd5, 0x87, 0xea, 0x39, 0x0e, 0x43,
-	0x7b, 0x8c, 0x85, 0x70, 0x29, 0x11, 0xbe, 0x05, 0x55, 0xc1, 0x28, 0xb2, 0x51, 0x22, 0x32, 0xd4,
-	0x84, 0xaa, 0x43, 0x7c, 0x8a, 0x7d, 0xca, 0x13, 0xaa, 0x59, 0xb1, 0x69, 0x3e, 0x07, 0x4d, 0xa0,
-	0x71, 0x05, 0x66, 0x46, 0x81, 0x2e, 0x14, 0x08, 0x0f, 0x21, 0x60, 0x0f, 0xea, 0x7d, 0x32, 0xf6,
-	0x7c, 0x0b, 0x7f, 0x9f, 0xe1, 0x90, 0xae, 0x38, 0x59, 0xf3, 0x33, 0x6c, 0x1c, 0x07, 0xd8, 0xa6,
-	0x98, 0xe5, 0x10, 0xfb, 0xb7, 0xd3, 0x3d, 0xa4, 0x75, 0x90, 0x20, 0x49, 0xb5, 0x99, 0xe8, 0xab,
-	0x4c, 0x21, 0xe4, 0x6c, 0x21, 0xcc, 0x4b, 0x58, 0x3f, 0x23, 0x9e, 0xff, 0x7f, 0xc0, 0x5b, 0x50,
-	0x0d, 0x08, 0x99, 0xa6, 0x0e, 0x8a, 0x99, 0x3d, 0xd7, 0x3c, 0x83, 0xfa, 0xb9, 0x4d, 0x9d, 0x6f,
-	0xc5, 0x21, 0x0d, 0x28, 0x4d, 0x70, 0x24, 0xb3, 0x66, 0xb1, 0xa5, 0x79, 0x09, 0x7a, 0x7c, 0x70,
-	0x85, 0xd1, 0x52, 0x05, 0x93, 0xb3, 0x05, 0x3b, 0x03, 0xc5, 0xc2, 0xe1, 0xec, 0x9a, 0xa2, 0xc7,
-	0x50, 0x76, 0x88, 0x8b, 0x39, 0x98, 0x9e, 0x80, 0x45, 0x9b, 0xc7, 0xc4, 0xc5, 0xa1, 0xc5, 0xf7,
-	0x19, 0xd6, 0x34, 0xd2, 0x11, 0x63, 0x09, 0xd3, 0x9c, 0x80, 0x26, 0x2a, 0xc9, 0x01, 0x1f, 0x81,
-	0x12, 0xf0, 0x95, 0xd0, 0xd7, 0xc8, 0x40, 0x5a, 0x62, 0x13, 0xbd, 0x80, 0xba, 0xcd, 0x15, 0x8f,
-	0xa2, 0x64, 0xe4, 0xa5, 0xc9, 0x68, 0xf6, 0xdc, 0x30, 0x6f, 0x01, 0xa5, 0xaf, 0x70, 0x31, 0xce,
-	0x23, 0xd0, 0xa3, 0xce, 0xf6, 0xaf, 0x48, 0x74, 0x9b, 0x22, 0xd6, 0x7b, 0xb9, 0x9b, 0xcf, 0x91,
-	0xf9, 0xb5, 0x8b, 0x2d, 0xc6, 0x9b, 0xbe, 0x64, 0x85, 0x79, 0xa3, 0x46, 0x59, 0xc2, 0x9b, 0x41,
-	0xae, 0x07, 0x29, 0xcb, 0xc4, 0xa0, 0x27, 0xf3, 0xa8, 0x10, 0xe7, 0x53, 0xa8, 0x25, 0xb9, 0x0a,
-	0xba, 0x3b, 0x03, 0x4e, 0x8d, 0x53, 0x64, 0x34, 0xc9, 0x80, 0x28, 0x4a, 0x93, 0xa4, 0x96, 0xa3,
-	0x49, 0x00, 0xd5, 0x38, 0xa3, 0xfd, 0x87, 0xa0, 0xa5, 0x3a, 0x0b, 0x29, 0x20, 0x5f, 0x9c, 0x1a,
-	0x6b, 0xec, 0x77, 0xf0, 0xde, 0x90, 0xf6, 0xbb, 0x00, 0xf3, 0xa9, 0x8d, 0x6a, 0x50, 0xe1, 0x7d,
-	0x65, 0xac, 0xa1, 0x06, 0xd4, 0x3e, 0xd9, 0x1e, 0xe5, 0x97, 0xca, 0x90, 0x90, 0x06, 0x55, 0xbe,
-	0xc4, 0xae, 0x21, 0xef, 0x9b, 0x00, 0xf3, 0xb1, 0x89, 0x54, 0x28, 0x0f, 0x3e, 0x9c, 0x5c, 0x18,
-	0x6b, 0x08, 0x40, 0x39, 0xee, 0x0f, 0x86, 0x27, 0xef, 0x0c, 0xa9, 0xf3, 0xa7, 0x92, 0xdc, 0xa2,
-	0x21, 0x0e, 0x6e, 0x3d, 0x07, 0xa3, 0x43, 0x81, 0x8e, 0xe2, 0x22, 0xa4, 0xa7, 0xd1, 0x0e, 0xca,
-	0x7e, 0xe4, 0xa9, 0x3e, 0x01, 0xa5, 0x4f, 0xc6, 0x64, 0x46, 0xd1, 0x82, 0x2e, 0xdd, 0xc9, 0x9e,
-	0x0f, 0x7a, 0x03, 0xeb, 0xa7, 0x98, 0x66, 0x5e, 0x9b, 0x45, 0x51, 0xdb, 0x8b, 0x3a, 0x2f, 0x8d,
-	0x90, 0x99, 0xec, 0xab, 0x10, 0x16, 0x74, 0xe7, 0x2b, 0xd0, 0x4f, 0x31, 0x1d, 0xfc, 0xf0, 0x93,
-	0x67, 0x75, 0x11, 0xc0, 0x66, 0xbe, 0x2b, 0x72, 0xc1, 0xc9, 0xdb, 0xb7, 0x2a, 0x38, 0xd7, 0x3c,
-	0xaf, 0x01, 0xe6, 0x13, 0x1b, 0x35, 0x85, 0xd3, 0x9d, 0x21, 0xbe, 0x2c, 0xfc, 0x08, 0xd4, 0x78,
-	0x2a, 0xa3, 0x07, 0xc2, 0x25, 0x37, 0xa6, 0x97, 0x87, 0x6a, 0xd1, 0xe8, 0xb5, 0x7d, 0x97, 0x4c,
-	0x93, 0xe2, 0xa6, 0xc7, 0xf1, 0xb2, 0xd0, 0x67, 0xa0, 0x9e, 0xfc, 0xf4, 0xf8, 0x89, 0xff, 0x4b,
-	0x85, 0x5f, 0x02, 0x0c, 0xb1, 0xef, 0x0e, 0x69, 0x80, 0xed, 0x29, 0xda, 0xcc, 0x3d, 0x72, 0x82,
-	0x2a, 0x1b, 0xd3, 0x96, 0x0e, 0x25, 0xd4, 0x05, 0x8d, 0xf7, 0xb2, 0x78, 0x7d, 0x17, 0x31, 0xe5,
-	0x5e, 0xcc, 0x43, 0xe9, 0xab, 0xc2, 0xff, 0x4e, 0x75, 0xff, 0x06, 0x00, 0x00, 0xff, 0xff, 0xa6,
-	0xdd, 0xb7, 0x57, 0x5d, 0x09, 0x00, 0x00,
+	// 660 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x9c, 0x55, 0x6f, 0x6f, 0xd3, 0x3e,
+	0x10, 0x5e, 0xd2, 0x35, 0x6d, 0x2f, 0x6d, 0x96, 0x9f, 0x7f, 0x30, 0xca, 0x24, 0xa4, 0x2a, 0x08,
+	0xd4, 0x15, 0x69, 0xaa, 0x5a, 0x81, 0x84, 0xc4, 0x1b, 0x34, 0xa6, 0xa9, 0xa3, 0x5b, 0x91, 0x3b,
+	0xc4, 0xab, 0xa9, 0x84, 0xc4, 0x2b, 0x51, 0x97, 0xb8, 0xc4, 0x0e, 0xd2, 0x3e, 0x07, 0xef, 0xf9,
+	0xac, 0x28, 0x8e, 0xf3, 0xb7, 0x2b, 0x52, 0x79, 0x15, 0x9f, 0xed, 0x7b, 0x9e, 0xbb, 0x7b, 0xee,
+	0x1c, 0xd0, 0x7d, 0x3b, 0x5c, 0x8d, 0x4e, 0xd6, 0x21, 0xe5, 0x14, 0xd5, 0x85, 0x61, 0x3d, 0x07,
+	0xfd, 0xbd, 0xe3, 0x10, 0xc6, 0xae, 0xe9, 0x8a, 0x04, 0xe8, 0x11, 0xd4, 0x79, 0xbc, 0xe8, 0x2a,
+	0x3d, 0xa5, 0xdf, 0xc2, 0x89, 0x61, 0x7d, 0x85, 0xe6, 0x67, 0x46, 0xc2, 0x49, 0x70, 0x4b, 0xd1,
+	0x53, 0x68, 0x2e, 0x43, 0x1a, 0xad, 0x17, 0x9e, 0x2b, 0x2e, 0x75, 0x70, 0x43, 0xd8, 0x13, 0x17,
+	0x19, 0xa0, 0x7a, 0x6e, 0x57, 0x15, 0x9b, 0xaa, 0xe7, 0xa2, 0x63, 0xd0, 0x18, 0xb7, 0x79, 0xc4,
+	0xba, 0xb5, 0x9e, 0xd2, 0x37, 0x46, 0xff, 0x9d, 0x24, 0x01, 0xc4, 0x58, 0x73, 0x71, 0x80, 0xe5,
+	0x05, 0xeb, 0xb7, 0x02, 0x4d, 0x4c, 0xa9, 0xbf, 0x2b, 0xc5, 0x11, 0x34, 0x1d, 0x7b, 0x6d, 0x3b,
+	0x1e, 0xbf, 0x17, 0x24, 0x1d, 0x9c, 0xd9, 0x05, 0xfa, 0xfd, 0x12, 0x7d, 0xcc, 0x53, 0xa6, 0x47,
+	0x3d, 0x68, 0x47, 0x8c, 0x84, 0x0b, 0xcf, 0x5d, 0xdc, 0x79, 0x8c, 0x77, 0xeb, 0xbd, 0x5a, 0xbf,
+	0x83, 0x21, 0xde, 0x9b, 0xb8, 0x53, 0x8f, 0x71, 0x6b, 0x0a, 0x8d, 0x4b, 0xc2, 0x98, 0xbd, 0x24,
+	0x32, 0x06, 0x25, 0x8b, 0xe1, 0x09, 0x34, 0xa4, 0xb3, 0x0c, 0x4c, 0x4b, 0xfc, 0x50, 0x17, 0x1a,
+	0x0e, 0x0d, 0x38, 0x09, 0xb8, 0x88, 0xad, 0x85, 0x53, 0xd3, 0x3a, 0x86, 0xf6, 0x94, 0x2e, 0xbd,
+	0x00, 0x93, 0x1f, 0x11, 0x61, 0xfc, 0x2f, 0x19, 0x5b, 0x37, 0x70, 0x90, 0xd6, 0x3e, 0xbd, 0xdd,
+	0x2f, 0x8a, 0xa4, 0x8f, 0x90, 0xcc, 0xab, 0xa0, 0xa3, 0x14, 0x6e, 0x23, 0x2f, 0x75, 0x23, 0xaf,
+	0x1b, 0x38, 0x48, 0xeb, 0xfe, 0x4f, 0xf0, 0x21, 0xa5, 0x7e, 0x15, 0x3e, 0xde, 0x93, 0xf0, 0x17,
+	0xd0, 0xbe, 0xb4, 0xb9, 0xf3, 0x7d, 0x77, 0x6c, 0x13, 0x6a, 0x2b, 0x72, 0x2f, 0x2a, 0xda, 0xc2,
+	0xf1, 0xd2, 0xba, 0x06, 0x43, 0x4a, 0xb0, 0x3b, 0x5a, 0x41, 0x0a, 0xb5, 0x2c, 0xc5, 0x05, 0x68,
+	0x98, 0xb0, 0xe8, 0x8e, 0xa3, 0x97, 0xb0, 0xef, 0x50, 0x97, 0x08, 0x30, 0x23, 0x03, 0x4b, 0x0e,
+	0x4f, 0xa9, 0x4b, 0x18, 0x16, 0xe7, 0x31, 0x96, 0x9f, 0xc4, 0x91, 0x62, 0x49, 0xd3, 0x5a, 0x81,
+	0x2e, 0x65, 0x15, 0x80, 0x2f, 0x40, 0x0b, 0xc5, 0x4a, 0xc6, 0xd7, 0x29, 0x41, 0x62, 0x79, 0x88,
+	0x5e, 0x43, 0xdb, 0x16, 0x11, 0x2f, 0x92, 0x64, 0xd4, 0xad, 0xc9, 0xe8, 0x76, 0x6e, 0x58, 0x01,
+	0x18, 0x79, 0x63, 0xec, 0xc6, 0x67, 0x24, 0x4d, 0x11, 0xdc, 0xd2, 0x5c, 0x37, 0x7d, 0x74, 0x50,
+	0x18, 0x4f, 0x81, 0x2a, 0x7a, 0x27, 0x5e, 0x09, 0x29, 0x03, 0x30, 0xf2, 0x4e, 0xd9, 0x91, 0x2f,
+	0xe9, 0x92, 0x2d, 0x7c, 0x19, 0xaa, 0x68, 0xa6, 0x94, 0x6f, 0xf0, 0x0c, 0xf4, 0x42, 0xed, 0x91,
+	0x06, 0xea, 0xd5, 0xb9, 0xb9, 0x17, 0x7f, 0x67, 0x1f, 0x4d, 0x65, 0x30, 0x06, 0xc8, 0xdf, 0x11,
+	0xd4, 0x82, 0xba, 0xa8, 0xbc, 0xb9, 0x87, 0x3a, 0xd0, 0xfa, 0x62, 0x7b, 0x5c, 0xb4, 0x9d, 0xa9,
+	0x20, 0x1d, 0x1a, 0x62, 0x49, 0x5c, 0x53, 0x1d, 0x58, 0x00, 0xf9, 0xf4, 0xa3, 0x26, 0xec, 0xcf,
+	0x3e, 0x9d, 0x5d, 0x99, 0x7b, 0x08, 0x40, 0x3b, 0x9d, 0xce, 0xe6, 0x67, 0x1f, 0x4c, 0x65, 0xf4,
+	0xab, 0x96, 0xf5, 0xd9, 0x9c, 0x84, 0x3f, 0x3d, 0x87, 0xa0, 0xa1, 0x44, 0x47, 0xff, 0xcb, 0x90,
+	0x8b, 0xc3, 0x7b, 0x84, 0xca, 0x9b, 0x22, 0xe7, 0x57, 0xa0, 0x4d, 0xe9, 0x92, 0x46, 0x1c, 0x3d,
+	0xa0, 0xe3, 0x51, 0xb9, 0x50, 0xe8, 0x1d, 0xe8, 0xe7, 0x84, 0x67, 0x2f, 0xec, 0x61, 0x55, 0x07,
+	0xc9, 0xf3, 0x78, 0x63, 0xbf, 0xe0, 0x9d, 0x3d, 0x9e, 0x87, 0xd5, 0xaa, 0x56, 0xbc, 0x2b, 0x1a,
+	0xbe, 0x05, 0x3d, 0x19, 0x50, 0x3b, 0x70, 0xa9, 0x9f, 0x25, 0x58, 0x1c, 0xda, 0x6d, 0xae, 0x6f,
+	0x00, 0xe6, 0x24, 0x70, 0xe7, 0x3c, 0x24, 0xb6, 0x8f, 0xd2, 0x4b, 0xe5, 0x11, 0xad, 0xa4, 0xda,
+	0x57, 0x86, 0x0a, 0x1a, 0x83, 0x2e, 0x04, 0x92, 0xcf, 0xe9, 0x43, 0x05, 0x32, 0xca, 0x60, 0x43,
+	0xe5, 0x9b, 0x26, 0xfe, 0x5a, 0xe3, 0x3f, 0x01, 0x00, 0x00, 0xff, 0xff, 0x7d, 0xcb, 0x37, 0x92,
+	0xc4, 0x06, 0x00, 0x00,
 }
