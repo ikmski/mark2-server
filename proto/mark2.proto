@@ -37,11 +37,6 @@ message UserInfo {
     UserStatus status = 3;
 }
 
-// ユーザ情報リスト
-message UserInfoList {
-    repeated UserInfo list = 1;
-}
-
 // ルーム情報
 message RoomInfo {
     uint32 group_id = 1;
@@ -51,21 +46,11 @@ message RoomInfo {
     repeated uint32 user_id_list = 5;
 }
 
-// ルーム情報リスト
-message RoomInfoList {
-    repeated RoomInfo list = 1;
-}
-
 // メッセージ
 message Message {
     uint32 id = 1;
     uint32 user_id = 2;
     string content = 3;
-}
-
-// メッセージリスト
-message MessageList {
-    repeated Message list = 1;
 }
 
 // ===== Request =====
@@ -75,16 +60,16 @@ message LoginRequest {
     uint32 group_id = 1;
 }
 
-// ルーム作成リクエスト
-message CreateRoomRequest {
+// ユーザ情報リクエスト
+message UserInfoRequest {
     AccessToken token = 1;
-    uint32 capacity = 2;
+    repeated uint32 user_id_list = 2;
 }
 
-// ルーム参加リクエスト
-message JoinRoomRequest {
+// ルーム情報リクエスト
+message RoomInfoRequest {
     AccessToken token = 1;
-    uint32 room_id = 2;
+    repeated uint32 room_id_list = 2;
 }
 
 // マッチリクエスト
@@ -113,45 +98,26 @@ message LoginResult {
     AccessToken access_token = 2;
 }
 
-// ユーザ情報リスト結果
-message UserInfoListResult {
-    Result result = 1;
-    UserInfoList user_info_list = 2;
-}
-
-// ルーム情報リスト結果
-message RoomInfoListResult {
-    Result result = 1;
-    RoomInfoList room_info_list = 2;
-}
-
 // ユーザ情報結果
 message UserInfoResult {
     Result result = 1;
-    UserInfo user_info = 2;
+    repeated UserInfo user_info_list = 2;
 }
 
 // ルーム情報結果
 message RoomInfoResult {
     Result result = 1;
-    RoomInfo room_info = 2;
+    repeated RoomInfo room_info_list = 2;
 }
 
 service MessageService {
     rpc Login (LoginRequest) returns (LoginResult); // ログイン
     rpc Logout (AccessToken) returns (Result);      // ログアウト
 
-    rpc GetUserInfoList (AccessToken) returns (UserInfoListResult); // ユーザ情報リスト取得
-    rpc GetRoomInfoList (AccessToken) returns (RoomInfoListResult); // ルーム情報リスト取得
-    rpc GetOwnUserInfo (AccessToken) returns (UserInfoResult);      // 自分のユーザ情報取得
-    rpc GetOwnRoomInfo (AccessToken) returns (RoomInfoResult);      // 自分のルーム情報取得
+    rpc GetUserInfo (UserInfoRequest) returns (UserInfoResult);      // ユーザ情報取得
+    rpc GetRoomInfo (RoomInfoRequest) returns (RoomInfoResult);      // ルーム情報取得
 
-    rpc CreateRoom (CreateRoomRequest) returns (RoomInfoResult); // ルーム作成
-    rpc JoinRoom (JoinRoomRequest) returns (RoomInfoResult);     // ルームに参加
-    rpc MatchRandom (MatchRequest) returns (RoomInfoResult);     // ランダムマッチング
-    rpc ExitRoom (AccessToken) returns (Result);                 // ルームを退出する
-
-    rpc SendStream (stream MessageRequest) returns (stream Result);       // ストリーム送信
-
-    rpc WaitMessage (AccessToken) returns (stream Message); // メッセージ受信待ち
+    rpc MatchRandom (MatchRequest) returns (RoomInfoResult);        // ランダムマッチング
+    rpc SendStream (stream MessageRequest) returns (stream Result); // ストリーム送信
+    rpc WaitMessage (AccessToken) returns (stream Message);         // メッセージ受信待ち
 }
