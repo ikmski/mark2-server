@@ -105,7 +105,43 @@ func (s *messageServer) GetUserInfo(ctx context.Context, req *mark2.UserInfoRequ
 
 func (s *messageServer) GetRoomInfo(ctx context.Context, req *mark2.RoomInfoRequest) (*mark2.RoomInfoResult, error) {
 
-	return new(mark2.RoomInfoResult), nil
+	result := mark2.NewRoomInfoResult()
+
+	claims, err := tokenDecode(req.Token.Token)
+	if err != nil {
+		return result, err
+	}
+
+	if len(req.RoomIdList) == 0 {
+
+		user, err := getUsersInstance().get(claims.UserID)
+		if err != nil {
+			return result, err
+		}
+
+		room, err := getRoomsInstance().get(user.roomID)
+		if err != nil {
+			return result, err
+		}
+		result.RoomInfoList = append(result.RoomInfoList, room.info)
+
+	} else {
+
+		for _, id := range req.RoomIdList {
+
+			room, err := getRoomsInstance().get(id)
+			if err != nil {
+				result.RoomInfoList = append(result.RoomInfoList, nil)
+			} else {
+				result.RoomInfoList = append(result.RoomInfoList, room.info)
+			}
+
+		}
+	}
+
+	result.Result.Code = mark2.ResultCodes_OK
+
+	return result, nil
 }
 
 func (s *messageServer) MatchRandom(ctx context.Context, req *mark2.MatchRequest) (*mark2.RoomInfoResult, error) {
