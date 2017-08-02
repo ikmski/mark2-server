@@ -69,7 +69,38 @@ func (s *messageServer) Logout(ctx context.Context, token *mark2.AccessToken) (*
 
 func (s *messageServer) GetUserInfo(ctx context.Context, req *mark2.UserInfoRequest) (*mark2.UserInfoResult, error) {
 
-	return new(mark2.UserInfoResult), nil
+	result := mark2.NewUserInfoResult()
+
+	claims, err := tokenDecode(req.Token.Token)
+	if err != nil {
+		return result, err
+	}
+
+	if len(req.UserIdList) == 0 {
+
+		user, err := getUsersInstance().get(claims.UserID)
+		if err != nil {
+			return result, err
+		}
+		result.UserInfoList = append(result.UserInfoList, user.info)
+
+	} else {
+
+		for _, id := range req.UserIdList {
+
+			user, err := getUsersInstance().get(id)
+			if err != nil {
+				result.UserInfoList = append(result.UserInfoList, nil)
+			} else {
+				result.UserInfoList = append(result.UserInfoList, user.info)
+			}
+
+		}
+	}
+
+	result.Result.Code = mark2.ResultCodes_OK
+
+	return result, nil
 }
 
 func (s *messageServer) GetRoomInfo(ctx context.Context, req *mark2.RoomInfoRequest) (*mark2.RoomInfoResult, error) {
