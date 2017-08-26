@@ -19,7 +19,8 @@ setup:
 	go get -u github.com/golang/dep/cmd/dep
 	go get -u github.com/Songmu/make2help/cmd/make2help
 	go get -u google.golang.org/grpc
-	go get -u github.com/golang/protobuf/{proto,protoc-gen-go}
+	go get -u github.com/golang/protobuf/proto
+	go get -u github.com/golang/protobuf/protoc-gen-go
 
 .PHONY: install-deps
 ## install dependencies
