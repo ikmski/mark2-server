@@ -245,8 +245,6 @@ func (s *messageServer) SendStream(srv mark2.MessageService_SendStreamServer) er
 		fmt.Printf("%v\n", err)
 		return err
 	}
-
-	return nil
 }
 
 func (s *messageServer) WaitMessage(token *mark2.AccessToken, srv mark2.MessageService_WaitMessageServer) error {
