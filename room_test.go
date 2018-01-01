@@ -74,6 +74,46 @@ func TestRoomJoinRoom(t *testing.T) {
 	}
 }
 
+func TestRoomIsJoined(t *testing.T) {
+
+	var groupID uint32 = 1001
+	var capacity uint32 = 3
+
+	var userID1 uint32 = 10001
+	var userID2 uint32 = 10002
+	var userID3 uint32 = 10003
+
+	room, err := createRoom(groupID, capacity, userID1)
+	if err != nil {
+		t.Errorf("got %v\n", err)
+	}
+
+	err = room.join(userID2)
+	if err != nil {
+		t.Errorf("got %v\n", err)
+	}
+
+	isJoined := room.isJoined(userID1)
+	if !isJoined {
+		t.Errorf("got %v\nwant %v", isJoined, true)
+	}
+
+	isJoined = room.isJoined(userID2)
+	if !isJoined {
+		t.Errorf("got %v\nwant %v", isJoined, true)
+	}
+
+	isJoined = room.isJoined(userID3)
+	if isJoined {
+		t.Errorf("got %v\nwant %v", isJoined, false)
+	}
+
+	err = room.remove()
+	if err != nil {
+		t.Errorf("got %v\n", err)
+	}
+}
+
 func TestRoomExitRoom(t *testing.T) {
 
 	var groupID uint32 = 1001

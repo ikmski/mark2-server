@@ -99,6 +99,17 @@ func (r *room) join(userID uint32) error {
 	return nil
 }
 
+func (r *room) isJoined(userID uint32) bool {
+
+	for _, id := range r.info.UserIdList {
+		if userID == id {
+			return true
+		}
+	}
+
+	return false
+}
+
 func (r *room) exit(userID uint32) error {
 
 	roomIDList := getRoomIDListInstance()
