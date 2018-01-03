@@ -188,6 +188,11 @@ func (s *messageServer) MatchRandom(ctx context.Context, req *mark2.MatchRequest
 			return result, err
 		}
 
+		// Set RoomID
+		// TODO unset when exit the room
+		own.roomID = newRoom.info.Id
+		other.roomID = newRoom.info.Id
+
 		// Change Status
 		err = own.changeStatus(mark2.UserStatus_Matched)
 		if err != nil {
@@ -343,6 +348,8 @@ func (s *messageServer) SendStream(srv mark2.MessageService_SendStreamServer) er
 				fmt.Printf("Connection broken: %v\n", err)
 				errChan <- err
 				break
+
+			default:
 			}
 		}
 	}()
@@ -352,6 +359,8 @@ func (s *messageServer) SendStream(srv mark2.MessageService_SendStreamServer) er
 		fmt.Printf("%v\n", err)
 		return err
 	}
+
+	return nil
 }
 
 func (s *messageServer) WaitMessage(token *mark2.AccessToken, srv mark2.MessageService_WaitMessageServer) error {
@@ -372,6 +381,8 @@ func (s *messageServer) WaitMessage(token *mark2.AccessToken, srv mark2.MessageS
 			err = ctx.Err()
 			fmt.Printf("Connection broken: %v\n", err)
 			break
+
+		default:
 		}
 
 		has := getUsersInstance().has(claims.UserID)
