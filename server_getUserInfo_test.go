@@ -4,7 +4,7 @@ import (
 	"context"
 	"testing"
 
-	mark2 "github.com/ikmski/mark2-server/proto"
+	"github.com/ikmski/mark2-server/proto"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/grpclog"
 )
@@ -52,8 +52,8 @@ func TestServerGetOwnUserInfo(t *testing.T) {
 			t.Errorf("got %v\nwant %v", len(userInfoResult.UserInfoList), 1)
 		}
 
-		if userInfoResult.UserInfoList[0].Id != maxUserID {
-			t.Errorf("got %v\nwant %v", userInfoResult.UserInfoList[0].Id, maxUserID)
+		if userInfoResult.UserInfoList[0].Id != currentUserID {
+			t.Errorf("got %v\nwant %v", userInfoResult.UserInfoList[0].Id, currentUserID)
 		}
 	}
 

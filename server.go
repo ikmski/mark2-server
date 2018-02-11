@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"time"
 
-	mark2 "github.com/ikmski/mark2-server/proto"
+	"github.com/ikmski/mark2-server/proto"
 	"golang.org/x/net/context"
 )
 
@@ -360,7 +360,6 @@ func (s *messageServer) SendStream(srv mark2.MessageService_SendStreamServer) er
 		return err
 	}
 
-	return nil
 }
 
 func (s *messageServer) WaitMessage(token *mark2.AccessToken, srv mark2.MessageService_WaitMessageServer) error {

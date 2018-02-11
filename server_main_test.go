@@ -8,7 +8,7 @@ import (
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/grpclog"
 
-	pb "github.com/ikmski/mark2-server/proto"
+	"github.com/ikmski/mark2-server/proto"
 )
 
 const (
@@ -23,7 +23,7 @@ func testServer() {
 	}
 
 	s := grpc.NewServer()
-	pb.RegisterMessageServiceServer(s, newServer())
+	mark2.RegisterMessageServiceServer(s, newServer())
 
 	err = s.Serve(lis)
 	if err != nil {

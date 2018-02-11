@@ -1,15 +1,38 @@
 package main
 
-import mark2 "github.com/ikmski/mark2-server/proto"
+import (
+	"sync"
+
+	"github.com/ikmski/mark2-server/proto"
+)
+
+var userIDMutex sync.Mutex
+var initialUserID uint32 = 1000000
+var currentUserID = initialUserID
 
 type user struct {
 	info   *mark2.UserInfo
 	roomID uint32
 }
 
+func initializeUserID() {
+	currentUserID = initialUserID
+}
+
+func issueUserID() uint32 {
+
+	userIDMutex.Lock()
+	defer userIDMutex.Unlock()
+
+	currentUserID++
+
+	return currentUserID
+}
+
 func newUser() *user {
 	u := new(user)
 	u.info = mark2.NewUserInfo()
+	u.roomID = 0
 	return u
 }
 

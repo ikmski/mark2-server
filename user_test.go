@@ -3,8 +3,27 @@ package main
 import (
 	"testing"
 
-	mark2 "github.com/ikmski/mark2-server/proto"
+	"github.com/ikmski/mark2-server/proto"
 )
+
+func TestUserIDIssue(t *testing.T) {
+
+	initializeUserID()
+	id := initialUserID
+
+	userID := issueUserID()
+	id++
+	if userID != id {
+		t.Errorf("got %v\nwant %v", userID, id)
+	}
+
+	userID = issueUserID()
+	id++
+	if userID != id {
+		t.Errorf("got %v\nwant %v", userID, id)
+	}
+
+}
 
 func TestUserCreateUser(t *testing.T) {
 

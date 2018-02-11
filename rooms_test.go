@@ -2,6 +2,25 @@ package main
 
 import "testing"
 
+func TestRoomIDIssue(t *testing.T) {
+
+	initializeRoomID()
+	id := initialRoomID
+
+	roomID := issueRoomID()
+	id++
+	if roomID != id {
+		t.Errorf("got %v\nwant %v", roomID, id)
+	}
+
+	roomID = issueRoomID()
+	id++
+	if roomID != id {
+		t.Errorf("got %v\nwant %v", roomID, id)
+	}
+
+}
+
 func TestRooms(t *testing.T) {
 
 	rooms := getRoomsInstance()

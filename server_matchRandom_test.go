@@ -5,7 +5,7 @@ import (
 	"testing"
 	"time"
 
-	mark2 "github.com/ikmski/mark2-server/proto"
+	"github.com/ikmski/mark2-server/proto"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/grpclog"
 )

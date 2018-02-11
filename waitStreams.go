@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"sync"
 
-	mark2 "github.com/ikmski/mark2-server/proto"
+	"github.com/ikmski/mark2-server/proto"
 )
 
 type waitStreams struct {

@@ -2,12 +2,31 @@ package main
 
 import (
 	"fmt"
+	"sync"
 
-	mark2 "github.com/ikmski/mark2-server/proto"
+	"github.com/ikmski/mark2-server/proto"
 )
+
+var roomIDMutex sync.Mutex
+var initialRoomID uint32 = 1000000
+var currentRoomID = initialRoomID
 
 type room struct {
 	info *mark2.RoomInfo
+}
+
+func initializeRoomID() {
+	currentRoomID = initialRoomID
+}
+
+func issueRoomID() uint32 {
+
+	roomIDMutex.Lock()
+	defer roomIDMutex.Unlock()
+
+	currentRoomID++
+
+	return currentRoomID
 }
 
 func newRoom() *room {

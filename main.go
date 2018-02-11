@@ -5,15 +5,12 @@ import (
 	"fmt"
 	"net"
 
-	//	"golang.org/x/net/context"
 	"google.golang.org/grpc"
 
 	"google.golang.org/grpc/credentials"
 	"google.golang.org/grpc/grpclog"
 
-	//	"github.com/golang/protobuf/proto"
-
-	mark2 "github.com/ikmski/mark2-server/proto"
+	"github.com/ikmski/mark2-server/proto"
 )
 
 var (
@@ -30,7 +27,7 @@ func main() {
 
 	flag.Parse()
 
-	lis, err := net.Listen("tcp", fmt.Sprintf(":%d", *port))
+	listener, err := net.Listen("tcp", fmt.Sprintf(":%d", *port))
 	if err != nil {
 		grpclog.Fatalf("failed to listen: %v", err)
 	}
@@ -49,5 +46,5 @@ func main() {
 
 	mark2.RegisterMessageServiceServer(grpcServer, newServer())
 
-	grpcServer.Serve(lis)
+	grpcServer.Serve(listener)
 }

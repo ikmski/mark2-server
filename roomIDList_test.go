@@ -3,7 +3,7 @@ package main
 import (
 	"testing"
 
-	mark2 "github.com/ikmski/mark2-server/proto"
+	"github.com/ikmski/mark2-server/proto"
 )
 
 func TestRoomIDList(t *testing.T) {
