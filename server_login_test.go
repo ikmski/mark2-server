@@ -25,7 +25,7 @@ func TestServerLogin(t *testing.T) {
 
 	var groupID uint32 = 10001
 
-	loginRequest := new(mark2.LoginRequest)
+	loginRequest := mark2.NewLoginRequest()
 	loginRequest.GroupId = groupID
 
 	// Login
@@ -39,7 +39,7 @@ func TestServerLogin(t *testing.T) {
 	if loginResult.Result == nil {
 		t.Errorf("got %v\n", loginResult.Result)
 	}
-	if loginResult.Result.Code != mark2.ResultCodes_OK {
+	if loginResult.Result.Code != mark2.ResultCode_OK {
 		t.Errorf("got %v\n", loginResult.Result.Code)
 	}
 	if loginResult.AccessToken == nil {
@@ -65,7 +65,7 @@ func TestServerLogin(t *testing.T) {
 	if logoutResult == nil {
 		t.Errorf("got %v\n", logoutResult)
 	}
-	if logoutResult.Code != mark2.ResultCodes_OK {
+	if logoutResult.Code != mark2.ResultCode_OK {
 		t.Errorf("got %v\n", logoutResult.Code)
 	}
 

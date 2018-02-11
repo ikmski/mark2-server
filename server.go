@@ -35,7 +35,7 @@ func (s *messageServer) Login(ctx context.Context, req *mark2.LoginRequest) (*ma
 	}
 
 	result.AccessToken.Token = token
-	result.Result.Code = mark2.ResultCodes_OK
+	result.Result.Code = mark2.ResultCode_OK
 
 	return result, nil
 }
@@ -62,7 +62,7 @@ func (s *messageServer) Logout(ctx context.Context, token *mark2.AccessToken) (*
 	}
 	user = nil
 
-	result.Code = mark2.ResultCodes_OK
+	result.Code = mark2.ResultCode_OK
 
 	return result, nil
 }
@@ -98,7 +98,7 @@ func (s *messageServer) GetUserInfo(ctx context.Context, req *mark2.UserInfoRequ
 		}
 	}
 
-	result.Result.Code = mark2.ResultCodes_OK
+	result.Result.Code = mark2.ResultCode_OK
 
 	return result, nil
 }
@@ -139,7 +139,7 @@ func (s *messageServer) GetRoomInfo(ctx context.Context, req *mark2.RoomInfoRequ
 		}
 	}
 
-	result.Result.Code = mark2.ResultCodes_OK
+	result.Result.Code = mark2.ResultCode_OK
 
 	return result, nil
 }
@@ -257,11 +257,11 @@ func (s *messageServer) MatchRandom(ctx context.Context, req *mark2.MatchRequest
 		}
 	}
 
-	result.Result.Code = mark2.ResultCodes_OK
+	result.Result.Code = mark2.ResultCode_OK
 	return result, nil
 }
 
-func (s *messageServer) SendStream(srv mark2.MessageService_SendStreamServer) error {
+func (s *messageServer) SendMessage(srv mark2.MessageService_SendMessageServer) error {
 
 	type receivedMessage struct {
 		userID  uint32
@@ -330,7 +330,7 @@ func (s *messageServer) SendStream(srv mark2.MessageService_SendStreamServer) er
 				}
 			}
 
-			result.Code = mark2.ResultCodes_OK
+			result.Code = mark2.ResultCode_OK
 			err = srv.Send(result)
 			if err != nil {
 				errChan <- err

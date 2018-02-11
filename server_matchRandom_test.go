@@ -24,7 +24,7 @@ func TestServerMatchRandomTimeOut(t *testing.T) {
 	var groupID uint32 = 10001
 
 	// Login
-	loginRequest := new(mark2.LoginRequest)
+	loginRequest := mark2.NewLoginRequest()
 	loginRequest.GroupId = groupID
 
 	loginResult, err := c.Login(context.Background(), loginRequest)
@@ -34,7 +34,7 @@ func TestServerMatchRandomTimeOut(t *testing.T) {
 	token1 := loginResult.AccessToken
 
 	// Match Request
-	matchRequest := new(mark2.MatchRequest)
+	matchRequest := mark2.NewMatchRequest()
 	matchRequest.Token = token1
 	roomInfoResult, err := c.MatchRandom(context.Background(), matchRequest)
 	if err != nil {
@@ -44,7 +44,7 @@ func TestServerMatchRandomTimeOut(t *testing.T) {
 		t.Errorf("got %v\nwant %v", len(roomInfoResult.RoomInfoList), 0)
 	}
 
-	userInfoRequest := new(mark2.UserInfoRequest)
+	userInfoRequest := mark2.NewUserInfoRequest()
 	userInfoRequest.Token = token1
 
 	userInfoResult, err := c.GetUserInfo(context.Background(), userInfoRequest)
@@ -73,7 +73,7 @@ func TestServerMatchRandomSuccess(t *testing.T) {
 	var groupID uint32 = 10001
 
 	// Login
-	loginRequest := new(mark2.LoginRequest)
+	loginRequest := mark2.NewLoginRequest()
 	loginRequest.GroupId = groupID
 
 	loginResult, err := c.Login(context.Background(), loginRequest)
@@ -92,7 +92,7 @@ func TestServerMatchRandomSuccess(t *testing.T) {
 	ch := make(chan struct{})
 	go func() {
 
-		matchRequest := new(mark2.MatchRequest)
+		matchRequest := mark2.NewMatchRequest()
 		matchRequest.Token = token1
 		roomInfoResult, err := c.MatchRandom(context.Background(), matchRequest)
 		if err != nil {
@@ -102,7 +102,7 @@ func TestServerMatchRandomSuccess(t *testing.T) {
 			t.Errorf("got %v\nwant %v", len(roomInfoResult.RoomInfoList), 1)
 		}
 
-		userInfoRequest := new(mark2.UserInfoRequest)
+		userInfoRequest := mark2.NewUserInfoRequest()
 		userInfoRequest.Token = token1
 		userInfoResult, err := c.GetUserInfo(context.Background(), userInfoRequest)
 		if userInfoResult.UserInfoList[0].Status != mark2.UserStatus_Matched {
@@ -119,7 +119,7 @@ func TestServerMatchRandomSuccess(t *testing.T) {
 
 	time.Sleep(1 * time.Second)
 
-	matchRequest := new(mark2.MatchRequest)
+	matchRequest := mark2.NewMatchRequest()
 	matchRequest.Token = token2
 	roomInfoResult, err := c.MatchRandom(context.Background(), matchRequest)
 	if err != nil {
@@ -129,7 +129,7 @@ func TestServerMatchRandomSuccess(t *testing.T) {
 		t.Errorf("got %v\nwant %v", len(roomInfoResult.RoomInfoList), 1)
 	}
 
-	userInfoRequest := new(mark2.UserInfoRequest)
+	userInfoRequest := mark2.NewUserInfoRequest()
 	userInfoRequest.Token = token2
 	userInfoResult, err := c.GetUserInfo(context.Background(), userInfoRequest)
 	if userInfoResult.UserInfoList[0].Status != mark2.UserStatus_Matched {

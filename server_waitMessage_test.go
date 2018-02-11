@@ -23,7 +23,7 @@ func TestServerWaitMessageConnection(t *testing.T) {
 
 	var groupID uint32 = 10001
 
-	loginRequest := new(mark2.LoginRequest)
+	loginRequest := mark2.NewLoginRequest()
 	loginRequest.GroupId = groupID
 
 	ctx1 := context.Background()
@@ -67,7 +67,7 @@ func TestServerWaitMessageLogout(t *testing.T) {
 
 	var groupID uint32 = 10001
 
-	loginRequest := new(mark2.LoginRequest)
+	loginRequest := mark2.NewLoginRequest()
 	loginRequest.GroupId = groupID
 
 	ctx1 := context.Background()

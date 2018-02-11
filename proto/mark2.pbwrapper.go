@@ -22,11 +22,35 @@ func NewMessage() *Message {
 }
 
 // ===== Request =====
+func NewLoginRequest() *LoginRequest {
+	r := new(LoginRequest)
+	return r
+}
+
+func NewUserInfoRequest() *UserInfoRequest {
+	r := new(UserInfoRequest)
+	return r
+}
+
+func NewRoomInfoRequest() *RoomInfoRequest {
+	r := new(RoomInfoRequest)
+	return r
+}
+
+func NewMatchRequest() *MatchRequest {
+	r := new(MatchRequest)
+	return r
+}
+
+func NewMessageRequest() *MessageRequest {
+	r := new(MessageRequest)
+	return r
+}
 
 // ===== Response =====
 func NewResult() *Result {
 	r := new(Result)
-	r.Code = ResultCodes_NG
+	r.Code = ResultCode_NG
 	r.Message = ""
 	return r
 }

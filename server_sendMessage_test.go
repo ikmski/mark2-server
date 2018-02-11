@@ -25,7 +25,7 @@ func TestServerSendMessage(t *testing.T) {
 	var groupID uint32 = 10001
 
 	// Login
-	loginRequest := new(mark2.LoginRequest)
+	loginRequest := mark2.NewLoginRequest()
 	loginRequest.GroupId = groupID
 
 	loginResult, err := c.Login(context.Background(), loginRequest)
@@ -45,7 +45,7 @@ func TestServerSendMessage(t *testing.T) {
 		ch := make(chan struct{})
 		go func() {
 
-			matchRequest := new(mark2.MatchRequest)
+			matchRequest := mark2.NewMatchRequest()
 			matchRequest.Token = token1
 			_, err := c.MatchRandom(context.Background(), matchRequest)
 			if err != nil {
@@ -57,7 +57,7 @@ func TestServerSendMessage(t *testing.T) {
 
 		time.Sleep(1 * time.Second)
 
-		matchRequest := new(mark2.MatchRequest)
+		matchRequest := mark2.NewMatchRequest()
 		matchRequest.Token = token2
 		_, err := c.MatchRandom(context.Background(), matchRequest)
 		if err != nil {
@@ -114,12 +114,12 @@ func TestServerSendMessage(t *testing.T) {
 	{
 		time.Sleep(1 * time.Second)
 
-		c2, err := c.SendStream(context.Background())
+		c2, err := c.SendMessage(context.Background())
 		if err != nil {
 			t.Errorf("got %v\n", err)
 		}
 
-		messageReqest := new(mark2.MessageRequest)
+		messageReqest := mark2.NewMessageRequest()
 		messageReqest.Token = token2
 		messageReqest.Content = "hoge"
 		err = c2.Send(messageReqest)

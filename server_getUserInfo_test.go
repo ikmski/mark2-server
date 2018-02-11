@@ -26,7 +26,7 @@ func TestServerGetOwnUserInfo(t *testing.T) {
 
 	// Login
 	{
-		loginRequest := new(mark2.LoginRequest)
+		loginRequest := mark2.NewLoginRequest()
 		loginRequest.GroupId = groupID
 
 		// Login
@@ -40,7 +40,7 @@ func TestServerGetOwnUserInfo(t *testing.T) {
 
 	// Get Own UserInfo
 	{
-		userInfoRequest := new(mark2.UserInfoRequest)
+		userInfoRequest := mark2.NewUserInfoRequest()
 		userInfoRequest.Token = token
 
 		userInfoResult, err := c.GetUserInfo(context.Background(), userInfoRequest)
