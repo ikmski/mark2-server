@@ -29,6 +29,12 @@ func issueRoomID() uint32 {
 	return currentRoomID
 }
 
+func createRoomIdListKey(groupID uint32, status mark2.RoomStatus) string {
+
+	key := fmt.Sprintf("room_id_list_by_group_id.%d_status.%s", groupID, status.String())
+	return key
+}
+
 func newRoom() *room {
 	r := new(room)
 	r.info = mark2.NewRoomInfo()
@@ -50,8 +56,8 @@ func createRoom(groupID uint32, capacity uint32, userID uint32) (*room, error) {
 	room.info.UserIdList = make([]uint32, 0, capacity)
 	room.info.UserIdList = append(room.info.UserIdList, userID)
 
-	roomIDList := getRoomIDListInstance()
-	err := roomIDList.add(room.info.GroupId, room.info.Status, room.info.Id)
+	set := getUint32SetInstance()
+	err := set.add(createRoomIdListKey(room.info.GroupId, room.info.Status), room.info.Id)
 	if err != nil {
 		return nil, err
 	}
@@ -67,8 +73,8 @@ func createRoom(groupID uint32, capacity uint32, userID uint32) (*room, error) {
 
 func (r *room) remove() error {
 
-	roomIDList := getRoomIDListInstance()
-	err := roomIDList.remove(r.info.GroupId, r.info.Status, r.info.Id)
+	set := getUint32SetInstance()
+	err := set.remove(createRoomIdListKey(r.info.GroupId, r.info.Status), r.info.Id)
 	if err != nil {
 		return err
 	}
@@ -97,8 +103,8 @@ func (r *room) join(userID uint32) error {
 		return fmt.Errorf("cannot join the room [%d]", r.info.Id)
 	}
 
-	roomIDList := getRoomIDListInstance()
-	err := roomIDList.remove(r.info.GroupId, r.info.Status, r.info.Id)
+	set := getUint32SetInstance()
+	err := set.remove(createRoomIdListKey(r.info.GroupId, r.info.Status), r.info.Id)
 	if err != nil {
 		return err
 	}
@@ -110,7 +116,7 @@ func (r *room) join(userID uint32) error {
 	} else {
 		r.info.Status = mark2.RoomStatus_OPEN
 	}
-	err = roomIDList.add(r.info.GroupId, r.info.Status, r.info.Id)
+	err = set.add(createRoomIdListKey(r.info.GroupId, r.info.Status), r.info.Id)
 	if err != nil {
 		return err
 	}
@@ -131,9 +137,9 @@ func (r *room) isJoined(userID uint32) bool {
 
 func (r *room) exit(userID uint32) error {
 
-	roomIDList := getRoomIDListInstance()
+	set := getUint32SetInstance()
 
-	err := roomIDList.remove(r.info.GroupId, r.info.Status, r.info.Id)
+	err := set.remove(createRoomIdListKey(r.info.GroupId, r.info.Status), r.info.Id)
 	if err != nil {
 		return err
 	}
@@ -159,7 +165,7 @@ func (r *room) exit(userID uint32) error {
 	} else {
 		r.info.Status = mark2.RoomStatus_OPEN
 
-		err := roomIDList.add(r.info.GroupId, r.info.Status, r.info.Id)
+		err := set.add(createRoomIdListKey(r.info.GroupId, r.info.Status), r.info.Id)
 		if err != nil {
 			return err
 		}

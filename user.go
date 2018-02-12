@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"sync"
 
 	"github.com/ikmski/mark2-server/proto"
@@ -29,6 +30,12 @@ func issueUserID() uint32 {
 	return currentUserID
 }
 
+func createUserIdListKey(groupID uint32, status mark2.UserStatus) string {
+
+	key := fmt.Sprintf("user_id_list_by_group_id.%d_status.%s", groupID, status.String())
+	return key
+}
+
 func newUser() *user {
 	u := new(user)
 	u.info = mark2.NewUserInfo()
@@ -44,8 +51,8 @@ func createUser(groupID uint32) (*user, error) {
 	user.info.GroupId = groupID
 	user.info.Id = newID
 
-	userIDList := getUserIDListInstance()
-	err := userIDList.add(user.info.GroupId, user.info.Status, user.info.Id)
+	set := getUint32SetInstance()
+	err := set.add(createUserIdListKey(user.info.GroupId, user.info.Status), user.info.Id)
 	if err != nil {
 		return nil, err
 	}
@@ -61,8 +68,8 @@ func createUser(groupID uint32) (*user, error) {
 
 func (u *user) remove() error {
 
-	userIDList := getUserIDListInstance()
-	err := userIDList.remove(u.info.GroupId, u.info.Status, u.info.Id)
+	set := getUint32SetInstance()
+	err := set.remove(createUserIdListKey(u.info.GroupId, u.info.Status), u.info.Id)
 	if err != nil {
 		return err
 	}
@@ -80,16 +87,16 @@ func (u *user) changeStatus(newStatus mark2.UserStatus) error {
 
 	if newStatus != u.info.Status {
 
-		userIDList := getUserIDListInstance()
+		set := getUint32SetInstance()
 
-		err := userIDList.remove(u.info.GroupId, u.info.Status, u.info.Id)
+		err := set.remove(createUserIdListKey(u.info.GroupId, u.info.Status), u.info.Id)
 		if err != nil {
 			return err
 		}
 
 		u.info.Status = newStatus
 
-		err = userIDList.add(u.info.GroupId, u.info.Status, u.info.Id)
+		err = set.add(createUserIdListKey(u.info.GroupId, u.info.Status), u.info.Id)
 		if err != nil {
 			return err
 		}

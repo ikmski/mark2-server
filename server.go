@@ -165,8 +165,8 @@ func (s *messageServer) MatchRandom(ctx context.Context, req *mark2.MatchRequest
 	}
 
 	// get users waiting for match
-	userIDList := getUserIDListInstance()
-	userIDs, err := userIDList.get(claims.GroupID, mark2.UserStatus_WaitMatch)
+	set := getUint32SetInstance()
+	userIDs, err := set.get(createUserIdListKey(claims.GroupID, mark2.UserStatus_WaitMatch))
 	if err != nil {
 		return result, err
 	}
@@ -218,8 +218,7 @@ func (s *messageServer) MatchRandom(ctx context.Context, req *mark2.MatchRequest
 			if own.info.Status == mark2.UserStatus_Matched {
 
 				// find joind room
-				roomIDList := getRoomIDListInstance()
-				roomIDs, err := roomIDList.get(claims.GroupID, mark2.RoomStatus_CLOSED)
+				roomIDs, err := set.get(createRoomIdListKey(claims.GroupID, mark2.RoomStatus_CLOSED))
 				if err != nil {
 					return result, err
 				}
